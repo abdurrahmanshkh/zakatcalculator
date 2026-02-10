@@ -549,7 +549,7 @@ export default function App() {
           <div className="lg:col-span-1 space-y-6">
             
             {/* Result Card */}
-            <div className="bg-white rounded-xl shadow-lg border border-emerald-100 overflow-hidden sticky top-6">
+            <div className="bg-white rounded-xl shadow-lg border border-emerald-100 overflow-hidden">
               <div className="bg-slate-900 text-white p-6 relative overflow-hidden">
                 <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500 rounded-full blur-3xl opacity-20 -translate-y-1/2 translate-x-1/2"></div>
                 <h2 className="text-xl font-bold flex items-center gap-2 relative z-10">
