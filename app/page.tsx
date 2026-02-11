@@ -1,10 +1,10 @@
 'use client'
 
-import React, { useState, useEffect, useMemo, useRef } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { 
-  Calculator, Coins, Building2, CreditCard, Info, ChevronDown, ChevronUp, 
-  RefreshCcw, Wallet, Gem, Briefcase, TrendingUp, Download, Phone, 
-  MessageCircle, Mail, MapPin, Globe, User, ExternalLink 
+  Calculator, Coins, CreditCard, Info, ChevronDown, ChevronUp, 
+  Wallet, Gem, Briefcase, TrendingUp, Download, Phone, 
+  MessageCircle, Mail, MapPin, Globe, ExternalLink 
 } from 'lucide-react';
 
 // --- Components ---
