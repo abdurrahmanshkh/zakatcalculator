@@ -24,8 +24,7 @@ import {
 /**
  * Types
  */
-type FiqhType = 'hanafi' | 'shafii' | 'maliki' | 'hanbali';
-type StocksStrategy = 'passive' | 'active';
+type FiqhType = 'hanafi' | 'shafii' | 'maliki' | 'hanbali' | 'unspecified';
 
 interface Sections {
   cash: boolean;
@@ -46,9 +45,6 @@ interface Assets {
   businessCash: number;
   receivables: number;
   stocksValue: number;
-  stocksStrategy: StocksStrategy;
-  pensionAmount: number;
-  pensionAccess: boolean;
   cryptoValue: number;
 }
 
@@ -428,18 +424,17 @@ export default function App(): React.ReactElement {
   // Currency State
   const [currency, setCurrency] = useState<string>('INR');
   const [currencySymbol, setCurrencySymbol] = useState<string>('₹');
-  const [exchangeRates, setExchangeRates] = useState<Record<string, number>>({ INR: 1 });
 
   // Precious Metal Prices (Defaults per gram in INR)
-  const [goldPrice, setGoldPrice] = useState<number>(16054.5);
-  const [silverPrice, setSilverPrice] = useState<number>(270.0);
+  const [goldPrice, setGoldPrice] = useState<number>(16045.04);
+  const [silverPrice, setSilverPrice] = useState<number>(275.32);
 
   // Expanded open/close state for sections
   const [sections, setSections] = useState<Sections>({
     cash: true,
     gold: true,
     business: true,
-    investments: false,
+    investments: true,
     liabilities: true,
   });
 
@@ -455,9 +450,6 @@ export default function App(): React.ReactElement {
     businessCash: 0,
     receivables: 0,
     stocksValue: 0,
-    stocksStrategy: 'passive',
-    pensionAmount: 0,
-    pensionAccess: false,
     cryptoValue: 0,
   });
 
@@ -481,27 +473,6 @@ export default function App(): React.ReactElement {
     };
     setCurrencySymbol(symbols[currency] || '$');
   }, [currency]);
-
-  // Fetch Currency Rates (Free API)
-  const fetchRates = async (): Promise<void> => {
-    try {
-      const response = await fetch('https://api.exchangerate-api.com/v4/latest/INR');
-      const data = await response.json();
-      if (data?.rates && typeof data.rates === 'object') {
-        setExchangeRates(data.rates as Record<string, number>);
-      }
-      // Note: We intentionally don't mutate gold/silver prices automatically here.
-    } catch (error) {
-      // Graceful fallback in case API fails
-      // eslint-disable-next-line no-console
-      console.error('Failed to fetch rates', error);
-    }
-  };
-
-  useEffect(() => {
-    fetchRates();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   // --- Logic & Calculations ---
 
@@ -555,14 +526,7 @@ export default function App(): React.ReactElement {
 
     // 4. Investments
     let investmentsTotal = 0;
-    if (assets.stocksStrategy === 'active') {
-      investmentsTotal += assets.stocksValue;
-    } else {
-      investmentsTotal += assets.stocksValue * 0.25;
-    }
-    if (assets.pensionAccess) {
-      investmentsTotal += assets.pensionAmount * 0.25;
-    }
+    investmentsTotal += assets.stocksValue;
     investmentsTotal += assets.cryptoValue;
     zakatableAssets += investmentsTotal;
     if (investmentsTotal > 0) breakdown.push({ label: 'Investments', amount: investmentsTotal });
@@ -572,15 +536,22 @@ export default function App(): React.ReactElement {
       deductibleLiabilities = liabilities.immediateDebts + liabilities.expensesDue;
     } else if (fiqh === 'shafii') {
       deductibleLiabilities = 0;
-    } else if (fiqh === 'maliki' || fiqh === 'hanbali') {
+    } else if (fiqh === 'maliki' || fiqh === 'hanbali' || fiqh === 'unspecified') {
       deductibleLiabilities = liabilities.immediateDebts;
     }
 
     const netWorth = Math.max(0, zakatableAssets - deductibleLiabilities);
 
     // Nisab
-    const silverNisab = 595 * silverPrice;
-    const goldNisab = 85 * goldPrice;
+    let silverNisab = 0;
+    let goldNisab = 0;
+    if (fiqh === 'hanafi') {
+      silverNisab = 612.36 * silverPrice;
+      goldNisab = 87.48 * goldPrice;
+    } else {
+      silverNisab = 595 * silverPrice;
+      goldNisab = 85 * goldPrice;
+    }
 
     // Rule: Use Silver Nisab if mixed assets
     const hasMixedAssets =
@@ -710,6 +681,7 @@ export default function App(): React.ReactElement {
                   <option value="shafii">Shafi&apos;i</option>
                   <option value="maliki">Maliki</option>
                   <option value="hanbali">Hanbali</option>
+                  <option value="unspecified">Unspecified</option>
                 </select>
 
                 <select
@@ -846,7 +818,7 @@ export default function App(): React.ReactElement {
                       label="Is gold used for personal jewelry?"
                       active={assets.goldJewelryUsage}
                       onToggle={(v) => updateAsset('goldJewelryUsage', v)}
-                      tooltip="Exempt in Shafi'i, Maliki, Hanbali if used for adornment."
+                      tooltip="Exempt in Shafi'i, Maliki, Hanbali, Unspecified if used for adornment."
                     />
                     {assets.goldJewelryUsage && fiqh !== 'hanafi' && (
                       <p className="text-xs text-emerald-600">Exempt from Zakat based on {fiqh} fiqh.</p>
@@ -866,7 +838,7 @@ export default function App(): React.ReactElement {
                 title="Business Assets"
                 isOpen={sections.business}
                 toggle={() => toggleSection('business')}
-                total={assets.businessStock + assets.receivables}
+                total={assets.businessStock + assets.businessCash + assets.receivables}
                 currency={currencySymbol}
               />
               {sections.business && (
@@ -902,11 +874,7 @@ export default function App(): React.ReactElement {
                 title="Investments"
                 isOpen={sections.investments}
                 toggle={() => toggleSection('investments')}
-                total={
-                  (assets.stocksStrategy === 'active' ? assets.stocksValue : assets.stocksValue * 0.25) +
-                  assets.cryptoValue +
-                  (assets.pensionAccess ? assets.pensionAmount * 0.25 : 0)
-                }
+                total={assets.stocksValue + assets.cryptoValue}
                 currency={currencySymbol}
               />
               {sections.investments && (
@@ -917,28 +885,6 @@ export default function App(): React.ReactElement {
                     onChange={(v) => updateAsset('stocksValue', v)}
                     currencySymbol={currencySymbol}
                   />
-                  <div className="flex gap-4 mb-4">
-                    <button
-                      onClick={() => updateAsset('stocksStrategy', 'passive')}
-                      className={`flex-1 py-2 text-xs rounded-md border cursor-pointer ${
-                        assets.stocksStrategy === 'passive'
-                          ? 'bg-emerald-50 border-emerald-500 text-emerald-700'
-                          : 'bg-white border-slate-200'
-                      }`}
-                    >
-                      Passive (25%)
-                    </button>
-                    <button
-                      onClick={() => updateAsset('stocksStrategy', 'active')}
-                      className={`flex-1 py-2 text-xs rounded-md border cursor-pointer ${
-                        assets.stocksStrategy === 'active'
-                          ? 'bg-emerald-50 border-emerald-500 text-emerald-700'
-                          : 'bg-white border-slate-200'
-                      }`}
-                    >
-                      Trader (100%)
-                    </button>
-                  </div>
                   <InputGroup
                     label="Crypto Value"
                     value={assets.cryptoValue}
