@@ -13,6 +13,18 @@ const geistMono = Geist_Mono({
   subsets: ['latin'],
 });
 
+/**
+ * Base URL used to resolve og/twitter image URLs.
+ * Set NEXT_PUBLIC_SITE_URL in your environment to your production URL.
+ */
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
+
+/**
+ * Export metadataBase so Next can resolve relative image paths correctly.
+ * Next will use this to build absolute URLs for Open Graph / Twitter images.
+ */
+export const metadataBase = new URL(SITE_URL);
+
 export const metadata: Metadata = {
   title: {
     default: 'Zakat Calculator — Accurate, private & easy',
@@ -36,14 +48,16 @@ export const metadata: Metadata = {
     follow: true,
     nocache: false,
   },
-  themeColor: '#0ea5a4',
+  // <-- Removed `themeColor` from metadata to avoid the warning.
+  // Add theme-color as a meta tag in app/head.tsx (see snippet below).
   openGraph: {
     title: 'Zakat Calculator — Accurate, private & easy',
     description:
       'Calculate Zakat precisely (select your School of Thought). Private — no data leaves your device.',
-    url: 'https://yourdomain.example', // <-- replace with your real URL or use env variable
+    // Use absolute URL for OG image
+    url: SITE_URL,
     siteName: 'Zakat Calculator',
-    images: ['/logo.png'],
+    images: [`${SITE_URL}/logo.png`], // absolute URL
     locale: 'en_US',
     type: 'website',
   },
@@ -52,14 +66,12 @@ export const metadata: Metadata = {
     title: 'Zakat Calculator — Accurate, private & easy',
     description:
       'Calculate Zakat precisely (select your School of Thought). Private — no data leaves your device.',
-    images: ['/logo.png'],
+    images: [`${SITE_URL}/logo.png`], // absolute URL
   },
   icons: {
     icon: '/favicon.ico',
     apple: '/logo.png',
-    other: [
-      { rel: 'manifest', url: '/manifest.json' },
-    ],
+    other: [{ rel: 'manifest', url: '/manifest.json' }],
   },
 };
 
