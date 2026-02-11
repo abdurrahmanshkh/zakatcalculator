@@ -90,7 +90,7 @@ const SectionHeader: React.FC<SectionHeaderProps> = ({
 }) => (
   <button
     onClick={toggle}
-    className="w-full flex items-center justify-between p-4 bg-slate-50 hover:bg-slate-100 transition-colors border-b border-slate-100 no-print"
+    className="w-full flex items-center justify-between p-4 bg-slate-50 hover:bg-slate-100 transition-colors border-b border-slate-100 no-print cursor-pointer"
   >
     <div className="flex items-center gap-3">
       <div className="p-2 bg-emerald-100 text-emerald-700 rounded-lg">
@@ -192,7 +192,7 @@ const Toggle: React.FC<ToggleProps> = ({ label, active, onToggle, tooltip }) => 
     </div>
     <button
       onClick={() => onToggle(!active)}
-      className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 no-print ${
+      className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 no-print cursor-pointer ${
         active ? 'bg-emerald-600' : 'bg-slate-200'
       }`}
     >
@@ -334,7 +334,7 @@ const ShareCard: React.FC = () => {
         {mounted && typeof navigator !== "undefined" && "share" in navigator && (
           <button
             onClick={handleNativeShare}
-            className="md:hidden text-slate-400 hover:text-slate-600 p-2"
+            className="md:hidden text-slate-400 hover:text-slate-600 p-2 cursor-pointer"
             aria-label="Native Share"
           >
             <Icons.Share className="w-5 h-5" />
@@ -355,7 +355,7 @@ const ShareCard: React.FC = () => {
         />
         <button
           onClick={handleCopy}
-          className={`absolute right-1.5 top-1.5 bottom-1.5 px-3 rounded-md text-xs font-medium transition-all duration-200 flex items-center gap-1.5
+          className={`absolute right-1.5 top-1.5 bottom-1.5 px-3 rounded-md text-xs font-medium transition-all duration-200 flex items-center gap-1.5 cursor-pointer
             ${copied 
               ? 'bg-emerald-100 text-emerald-700 shadow-none' 
               : 'bg-white shadow-sm border border-slate-200 text-slate-700 hover:text-emerald-700 hover:border-emerald-300'
@@ -410,7 +410,7 @@ const SocialButton: React.FC<{ onClick: () => void; icon: React.ReactNode; label
 }) => (
   <button
     onClick={onClick}
-    className={`flex items-center justify-center gap-2.5 px-3 py-2.5 rounded-lg border transition-all duration-200 group ${colorClass}`}
+    className={`flex items-center justify-center gap-2.5 px-3 py-2.5 rounded-lg border transition-all duration-200 group cursor-pointer ${colorClass}`}
     title={`Share on ${label}`}
   >
     <span className="shrink-0 transition-transform group-hover:scale-110">{icon}</span>
@@ -616,33 +616,43 @@ export default function App(): React.ReactElement {
     <div className="min-h-screen bg-slate-50 font-sans text-slate-900 print:bg-white print:text-black">
       {/* Styles for Printing */}
       <style>{`
+        /* Hide printable report from screen view */
+        .print-only {
+          display: none;
+        }
+
         @media print {
-        body * {
-          visibility: hidden;
-        }
+          body * {
+            visibility: hidden;
+          }
 
-        .print-area,
-        .print-area * {
-          visibility: visible;
-        }
+          .print-area,
+          .print-area * {
+            visibility: visible;
+          }
 
-        .print-area {
-          position: absolute;
-          left: 0;
-          top: 0;
-          width: 100%;
-        }
+          .print-area {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+          }
 
-        .no-print {
-          display: none !important;
-        }
+          /* Show printable report only when printing */
+          .print-only {
+            display: block;
+          }
 
-        input {
-          border: none !important;
-          padding: 0 !important;
-          font-weight: bold;
+          .no-print {
+            display: none !important;
+          }
+
+          input {
+            border: none !important;
+            padding: 0 !important;
+            font-weight: bold;
+          }
         }
-      }
       `}</style>
 
       {/* --- HEADER --- */}
@@ -910,7 +920,7 @@ export default function App(): React.ReactElement {
                   <div className="flex gap-4 mb-4">
                     <button
                       onClick={() => updateAsset('stocksStrategy', 'passive')}
-                      className={`flex-1 py-2 text-xs rounded-md border ${
+                      className={`flex-1 py-2 text-xs rounded-md border cursor-pointer ${
                         assets.stocksStrategy === 'passive'
                           ? 'bg-emerald-50 border-emerald-500 text-emerald-700'
                           : 'bg-white border-slate-200'
@@ -920,7 +930,7 @@ export default function App(): React.ReactElement {
                     </button>
                     <button
                       onClick={() => updateAsset('stocksStrategy', 'active')}
-                      className={`flex-1 py-2 text-xs rounded-md border ${
+                      className={`flex-1 py-2 text-xs rounded-md border cursor-pointer ${
                         assets.stocksStrategy === 'active'
                           ? 'bg-emerald-50 border-emerald-500 text-emerald-700'
                           : 'bg-white border-slate-200'
@@ -1045,7 +1055,7 @@ export default function App(): React.ReactElement {
                   {/* Download Button */}
                   <button
                     onClick={handlePrint}
-                    className="w-full mt-4 flex items-center justify-center gap-2 bg-slate-800 hover:bg-slate-900 text-white py-3 rounded-lg transition-colors font-medium text-sm no-print"
+                    className="w-full mt-4 flex items-center justify-center gap-2 bg-slate-800 hover:bg-slate-900 text-white py-3 rounded-lg transition-colors font-medium text-sm no-print cursor-pointer"
                   >
                     <Download size={16} /> Download Summary Report
                   </button>
