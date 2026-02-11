@@ -503,16 +503,19 @@ export default function App(): React.ReactElement {
 
     // 2. Gold & Silver
     let goldValue = 0;
-    const silverValue = assets.silverGrams * silverPrice;
+    let silverValue = 0;
 
     if (fiqh === 'hanafi') {
       goldValue = assets.goldGrams * goldPrice;
+      silverValue = assets.silverGrams * silverPrice;
     } else {
-      // Shafi, Maliki, Hanbali: Exempt personal jewelry
+      // Shafi, Maliki, Hanbali, Unspecified: Exempt personal jewelry
       if (assets.goldJewelryUsage) {
         goldValue = 0;
+        silverValue = 0;
       } else {
         goldValue = assets.goldGrams * goldPrice;
+        silverValue = assets.silverGrams * silverPrice;
       }
     }
 
@@ -792,8 +795,8 @@ export default function App(): React.ReactElement {
                 isOpen={sections.gold}
                 toggle={() => toggleSection('gold')}
                 total={
-                  assets.silverGrams * silverPrice +
-                  (fiqh === 'hanafi' || !assets.goldJewelryUsage ? assets.goldGrams * goldPrice : 0)
+                  (fiqh === 'hanafi' || !assets.goldJewelryUsage ? assets.goldGrams * goldPrice : 0) +
+                  (fiqh === 'hanafi' || !assets.goldJewelryUsage ? assets.silverGrams * silverPrice : 0)
                 }
                 currency={currencySymbol}
               />
@@ -817,7 +820,7 @@ export default function App(): React.ReactElement {
                   </div>
                   <div className="bg-slate-50 p-4 rounded-lg border border-slate-100">
                     <Toggle
-                      label="Is gold used for personal jewelry?"
+                      label="Is gold and silver used for personal jewelry?"
                       active={assets.goldJewelryUsage}
                       onToggle={(v) => updateAsset('goldJewelryUsage', v)}
                       tooltip="Exempt in Shafi'i, Maliki, Hanbali, Unspecified if used for adornment."
