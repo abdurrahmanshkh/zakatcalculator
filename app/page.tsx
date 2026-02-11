@@ -262,13 +262,8 @@ const ShareCard: React.FC = () => {
 
   // Prevent hydration mismatch by checking mount
   if (!mounted) return null;
-
-  const getPageUrl = () => {
-    if (typeof window === 'undefined') return 'https://yourdomain.example';
-    return window.location.href;
-  };
   
-  const pageUrl = mounted ? getPageUrl() : '';
+  const pageUrl = 'https://myzakat.vercel.app';
   const shareText = encodeURIComponent(
     'Discover the Zakat Calculator — an accurate, privacy-first tool to estimate your Zakat. Select your School of Thought, enter assets & liabilities, get a clear breakdown and printable report. No data leaves your device — try it now:'
   );

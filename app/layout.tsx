@@ -15,9 +15,8 @@ const geistMono = Geist_Mono({
 
 /**
  * Base URL used to resolve og/twitter image URLs.
- * Set NEXT_PUBLIC_SITE_URL in your environment to your production URL.
  */
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
+const SITE_URL = 'https://myzakat.vercel.app';
 
 /**
  * Export metadataBase so Next can resolve relative image paths correctly.

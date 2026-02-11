@@ -1,6 +1,6 @@
 // app/head.tsx
 export default function Head() {
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://yourdomain.example';
+  const siteUrl = 'https://myzakat.vercel.app';
   const ld = {
     '@context': 'https://schema.org',
     '@type': 'WebSite',

@@ -1,7 +1,7 @@
 // app/sitemap.ts
 import type { MetadataRoute } from 'next';
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://yourdomain.example';
+const SITE_URL = 'https://myzakat.vercel.app';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // If you have dynamic pages (posts, cases, receipts), fetch them here and map to URLs.
