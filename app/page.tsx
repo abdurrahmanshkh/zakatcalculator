@@ -180,11 +180,11 @@ interface ToggleProps {
 }
 const Toggle: React.FC<ToggleProps> = ({ label, active, onToggle, tooltip }) => (
   <div className="flex items-center justify-between mb-4 break-inside-avoid">
-    <div className="flex items-center gap-2">
+    <div className="flex items-center gap-2 flex-1 min-w-0">
       <span className="text-sm font-medium text-slate-700">{label}</span>
       {tooltip && (
         <div className="group relative no-print">
-          <Info size={14} className="text-slate-400 cursor-help" />
+          <Info size={14} className="text-slate-400 cursor-help mr-6" />
           <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-64 p-2 bg-slate-800 text-white text-xs rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">
             {tooltip}
           </div>
@@ -675,7 +675,7 @@ export default function App(): React.ReactElement {
               </p>
             </div>
 
-            <div className="flex flex-col gap-3 w-full md:w-auto">
+            <div className="flex flex-col gap-3 w-full md:w-auto md:m-0 mb-3">
               <div className="flex gap-2">
                 <select
                   value={fiqh}
