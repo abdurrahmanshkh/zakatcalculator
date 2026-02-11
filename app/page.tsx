@@ -68,8 +68,13 @@ const Card: React.FC<React.PropsWithChildren<{ className?: string }>> = ({
   </div>
 );
 
+type IconProps = {
+  size?: number;
+  className?: string;
+};
+
 interface SectionHeaderProps {
-  icon: React.ComponentType<any>;
+  icon: React.ComponentType<IconProps>;
   title: string;
   isOpen: boolean;
   toggle: () => void;
@@ -304,7 +309,7 @@ const ShareCard: React.FC = () => {
       try {
         await navigator.share({
           title: 'Zakat Calculator',
-          text: 'Accurate, private Zakat Calculator — try it.',
+          text: 'Discover the Zakat Calculator — an accurate, privacy-first tool to estimate your Zakat. Select your School of Thought, enter assets & liabilities, get a clear breakdown and printable report. No data leaves your device — try it now:',
           url: pageUrl,
         });
       } catch {
@@ -423,7 +428,6 @@ export default function App(): React.ReactElement {
 
   // Currency State
   const [currency, setCurrency] = useState<string>('INR');
-  const [currencySymbol, setCurrencySymbol] = useState<string>('₹');
 
   // Precious Metal Prices (Defaults per gram in INR)
   const [goldPrice, setGoldPrice] = useState<number>(16045.04);
@@ -462,17 +466,15 @@ export default function App(): React.ReactElement {
   // --- Effects ---
 
   // Update Symbol when currency changes
-  useEffect(() => {
-    const symbols: Record<string, string> = {
+  const currencySymbol =
+    {
       INR: '₹',
       USD: '$',
       GBP: '£',
       EUR: '€',
       AED: 'د.إ',
       SAR: '﷼',
-    };
-    setCurrencySymbol(symbols[currency] || '$');
-  }, [currency]);
+    }[currency] || '$';
 
   // --- Logic & Calculations ---
 
