@@ -617,13 +617,32 @@ export default function App(): React.ReactElement {
       {/* Styles for Printing */}
       <style>{`
         @media print {
-          .no-print { display: none !important; }
-          .print-only { display: block !important; }
-          body { background: white; }
-          .page-break { page-break-before: always; }
-          input { border: none !important; padding: 0 !important; font-weight: bold; }
+        body * {
+          visibility: hidden;
         }
-        .print-only { display: none; }
+
+        .print-area,
+        .print-area * {
+          visibility: visible;
+        }
+
+        .print-area {
+          position: absolute;
+          left: 0;
+          top: 0;
+          width: 100%;
+        }
+
+        .no-print {
+          display: none !important;
+        }
+
+        input {
+          border: none !important;
+          padding: 0 !important;
+          font-weight: bold;
+        }
+      }
       `}</style>
 
       {/* --- HEADER --- */}
@@ -1116,7 +1135,7 @@ export default function App(): React.ReactElement {
       </footer>
 
       {/* --- PRINTABLE REPORT VIEW (Hidden normally) --- */}
-      <div className="print-only p-8 max-w-3xl mx-auto">
+      <div className="print-only p-8 max-w-3xl mx-auto print-area">
         {/* Print Header */}
         <div className="flex justify-between items-start border-b-2 border-slate-800 pb-6 mb-8">
           <div>
@@ -1210,7 +1229,7 @@ export default function App(): React.ReactElement {
 
         {/* Footer for Print */}
         <div className="text-center text-xs text-slate-400 mt-12 pt-8 border-t border-slate-200">
-          <p>Calculated using Il An Noor Zakat Calculator | Developed by Abdur Rehman Shaikh</p>
+          <p>Calculated using Il An Noor Zakat Calculator | Developed by <a href="https://abdurrahmanshkh.vercel.app" target="_blank" className="text-emerald-600 hover:underline">Abdur Rehman Shaikh</a></p>
           <p>For doubts contact Mufti Danish: +91 8104998499 | ilannoorirc@gmail.com</p>
         </div>
       </div>
