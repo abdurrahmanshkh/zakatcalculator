@@ -220,8 +220,8 @@ export default function App(): React.ReactElement {
   const [exchangeRates, setExchangeRates] = useState<Record<string, number>>({ INR: 1 });
 
   // Precious Metal Prices (Defaults per gram in INR)
-  const [goldPrice, setGoldPrice] = useState<number>(7200.0);
-  const [silverPrice, setSilverPrice] = useState<number>(92.0);
+  const [goldPrice, setGoldPrice] = useState<number>(16054.5);
+  const [silverPrice, setSilverPrice] = useState<number>(270.0);
 
   // Expanded open/close state for sections
   const [sections, setSections] = useState<Sections>({
@@ -467,7 +467,7 @@ export default function App(): React.ReactElement {
                   className="bg-emerald-800 text-white border border-emerald-600 text-sm rounded-lg p-2.5 outline-none focus:ring-2 focus:ring-emerald-400 flex-1 cursor-pointer"
                 >
                   <option value="hanafi">Hanafi</option>
-                  <option value="shafii">Shafi'i</option>
+                  <option value="shafii">Shafi&apos;i</option>
                   <option value="maliki">Maliki</option>
                   <option value="hanbali">Hanbali</option>
                 </select>
