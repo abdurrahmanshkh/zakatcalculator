@@ -728,13 +728,23 @@ export default function App(): React.ReactElement {
             </div>
 
             <div className="flex flex-col gap-3 w-full md:w-auto">
-              <div className="flex gap-2">
-                {/* Fiqh Selector */}
-                <div className="relative flex-1">
+              <div className="flex gap-2 items-start w-full justify-end">
+                {/* Fiqh Disclaimer Tooltip (Left Side) */}
+                <div className="text-xs text-white bg-emerald-800/90 p-2 rounded-md border border-emerald-700 w-90 z-20 no-print">
+                  <Info size={12} className="inline mr-1 mb-0.5" />
+                  Proper Fiqh selection is important for accurate zakat calculation. Select
+                  unspecified if unsure, but we recommend consulting a scholar for
+                  personalized guidance. This tool provides estimates based on general
+                  principles and may not cover all individual circumstances.
+                </div>
+
+                {/* Stacked Selectors (Right Side) */}
+                <div className="flex flex-col gap-2">
+                  {/* Fiqh Selector */}
                   <select
                     value={fiqh}
                     onChange={(e) => setFiqh(e.target.value as FiqhType)}
-                    className="bg-emerald-800 text-white border border-emerald-600 text-sm rounded-lg p-2.5 outline-none focus:ring-2 focus:ring-emerald-400 w-full cursor-pointer"
+                    className="bg-emerald-800 text-white border border-emerald-600 rounded-lg p-2.5 outline-none focus:ring-2 focus:ring-emerald-400 w-28 md:h-11 h-17 cursor-pointer"
                   >
                     <option value="hanafi">Hanafi</option>
                     <option value="shafii">Shafi&apos;i</option>
@@ -742,34 +752,30 @@ export default function App(): React.ReactElement {
                     <option value="hanbali">Hanbali</option>
                     <option value="unspecified">Unspecified</option>
                   </select>
-                  {/* Fiqh Disclaimer Tooltip */}
-                  <div className="absolute top-full left-0 mt-1 text-xs text-emerald-200 bg-emerald-800/90 p-2 rounded-md border border-emerald-700 w-64 z-20 no-print">
-                    <Info size={12} className="inline mr-1" />
-                    Fiqh selection affects zakatability of personal jewelry and debt deductions. For non-Hanafi, personal gold/silver is exempt. Hanbali & Maliki follow same method as Unspecified.
-                  </div>
-                </div>
 
-                <select
-                  value={currency}
-                  onChange={(e) => setCurrency(e.target.value)}
-                  className="bg-emerald-800 text-white border border-emerald-600 text-sm rounded-lg p-2.5 outline-none focus:ring-2 focus:ring-emerald-400 w-24 cursor-pointer"
-                >
-                  <option value="INR">INR (₹)</option>
-                  <option value="USD">USD ($)</option>
-                  <option value="EUR">EUR (€)</option>
-                  <option value="GBP">GBP (£)</option>
-                  <option value="AED">AED (د.إ)</option>
-                  <option value="SAR">SAR (﷼)</option>
-                </select>
+                  {/* Currency Selector */}
+                  <select
+                    value={currency}
+                    onChange={(e) => setCurrency(e.target.value)}
+                    className="md:h-11 h-17 bg-emerald-800 text-white border border-emerald-600 rounded-lg p-2.5 outline-none focus:ring-2 focus:ring-emerald-400 w-28 cursor-pointer"
+                  >
+                    <option value="INR">INR (₹)</option>
+                    <option value="USD">USD ($)</option>
+                    <option value="EUR">EUR (€)</option>
+                    <option value="GBP">GBP (£)</option>
+                    <option value="AED">AED (د.إ)</option>
+                    <option value="SAR">SAR (﷼)</option>
+                  </select>
+                </div>
               </div>
 
               {/* Market Rates with Note */}
-              <div className="bg-emerald-800/50 p-3 rounded-lg border border-emerald-600/30 text-sm">
+              <div className="bg-emerald-800/50 p-3 rounded-lg border border-emerald-600/30 text-sm md:mb-0 mb-3">
                 <div className="flex items-center justify-between mb-2">
                   <p className="text-emerald-200 text-xs font-semibold uppercase tracking-wider">
                     Market Rates (Per Gram)
                   </p>
-                  <span className="text-[10px] text-emerald-300 bg-emerald-900/50 px-2 py-0.5 rounded-full">
+                  <span className="text-xs text-white bg-emerald-900/50 px-2 py-0.5 rounded-full">
                     Mumbai, India • 12/02/2026
                   </span>
                 </div>
@@ -805,11 +811,12 @@ export default function App(): React.ReactElement {
                     </div>
                   </div>
                 </div>
-                <p className="text-[10px] text-emerald-300 mt-2">
-                  ⓘ Update rates to match your local market and currency.
-                </p>
+                <div className="mt-2 text-xs text-white">
+                  <Info size={12} className="inline mr-1 mb-0.5" />
+                  Update rates to match your local market and currency.
+                </div>
               </div>
-            </div>
+            </div>          
           </div>
         </div>
       </header>
