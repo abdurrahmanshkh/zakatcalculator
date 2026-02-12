@@ -19,6 +19,11 @@ import {
   MapPin,
   Globe,
   ExternalLink,
+  Heart,
+  ArrowRight,
+  Award,
+  Users,
+  HandHeart,
 } from 'lucide-react';
 
 /**
@@ -38,9 +43,11 @@ interface Assets {
   cashInHand: number;
   bankDeposit: number;
   digitalWallets: number;
-  goldGrams: number;
-  goldJewelryUsage: boolean;
-  silverGrams: number;
+  // Gold & Silver – always separate personal/investment
+  goldPersonalGrams: number;
+  goldInvestmentGrams: number;
+  silverPersonalGrams: number;
+  silverInvestmentGrams: number;
   businessStock: number;
   businessCash: number;
   receivables: number;
@@ -54,7 +61,7 @@ interface Liabilities {
 }
 
 /**
- * Presentational components with explicit props
+ * Presentational components
  */
 
 const Card: React.FC<React.PropsWithChildren<{ className?: string }>> = ({
@@ -126,15 +133,17 @@ interface InputGroupProps {
   placeholder?: string;
   tooltip?: string;
   currencySymbol?: string;
+  unit?: string;
 }
 const InputGroup: React.FC<InputGroupProps> = ({
   label,
   sublabel,
   value,
   onChange,
-  placeholder = '0.00',
+  placeholder = '0',
   tooltip,
   currencySymbol = '',
+  unit = '',
 }) => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const parsed = parseFloat(e.target.value);
@@ -156,15 +165,23 @@ const InputGroup: React.FC<InputGroupProps> = ({
       </div>
       {sublabel && <p className="text-xs text-slate-500 mb-2">{sublabel}</p>}
       <div className="relative">
-        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 font-medium">
-          {currencySymbol}
-        </span>
+        {currencySymbol && (
+          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 font-medium">
+            {currencySymbol}
+          </span>
+        )}
+        {unit && !currencySymbol && (
+          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 font-medium">
+            {unit}
+          </span>
+        )}
         <input
           type="number"
           min="0"
+          step="any"
           value={value || ''}
           onChange={handleChange}
-          className="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all"
+          className={`w-full ${currencySymbol ? 'pl-10' : unit ? 'pl-10' : 'pl-4'} pr-4 py-2.5 bg-white border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all`}
           placeholder={placeholder}
         />
       </div>
@@ -172,43 +189,109 @@ const InputGroup: React.FC<InputGroupProps> = ({
   );
 };
 
-interface ToggleProps {
-  label: string;
-  active: boolean;
-  onToggle: (v: boolean) => void;
-  tooltip?: string;
-}
-const Toggle: React.FC<ToggleProps> = ({ label, active, onToggle, tooltip }) => (
-  <div className="flex items-center justify-between mb-4 break-inside-avoid">
-    <div className="flex items-center gap-2 flex-1 min-w-0">
-      <span className="text-sm font-medium text-slate-700">{label}</span>
-      {tooltip && (
-        <div className="group relative no-print">
-          <Info size={14} className="text-slate-400 cursor-help mr-6" />
-          <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-64 p-2 bg-slate-800 text-white text-xs rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">
-            {tooltip}
+/**
+ * Donation Stats Card – to be placed between Summary and ShareCard
+ */
+const PayZakatCard: React.FC<{ zakatAmount: number; currency: string; currencySymbol: string }> = ({
+  zakatAmount,
+  currency,
+  currencySymbol,
+}) => {
+  const stats = [
+    { label: 'Total Funds Donated', amount: 1870381, icon: Coins },
+    { label: 'Ration & Shelter', amount: 921362, icon: Home },
+    { label: 'Medical Aid', amount: 407138, icon: Heart },
+    { label: 'Education Aid', amount: 117581, icon: GraduationCap },
+  ];
+
+  const formatAmount = (amt: number) => {
+    return amt.toLocaleString(undefined, { maximumFractionDigits: 0 });
+  };
+
+  const paymentUrl = `https://www.ilannoor.org/payments?type=zakat&amount=${Math.floor(
+    zakatAmount
+  )}`;
+
+  return (
+    <div className="bg-white rounded-xl shadow-lg border border-emerald-200 overflow-hidden relative">
+      {/* Decorative gradient */}
+      <div className="absolute top-0 right-0 w-40 h-40 bg-emerald-200 rounded-full blur-3xl opacity-30 -translate-y-1/2 translate-x-1/2" />
+      <div className="absolute bottom-0 left-0 w-40 h-40 bg-amber-200 rounded-full blur-3xl opacity-20 translate-y-1/2 -translate-x-1/2" />
+
+      <div className="relative p-6">
+        <div className="flex items-center gap-3 mb-5">
+          <div className="p-3 bg-gradient-to-br from-emerald-600 to-emerald-700 rounded-xl shadow-md">
+            <HandHeart className="w-6 h-6 text-white" />
+          </div>
+          <div>
+            <h3 className="text-xl font-bold text-slate-900">Pay Your Zakat</h3>
+            <p className="text-sm text-slate-500">100% reaches the most needy</p>
           </div>
         </div>
-      )}
+
+        {/* Impact Stats Grid */}
+        <div className="grid grid-cols-2 gap-3 mb-6">
+          {stats.map((stat, idx) => (
+            <div key={idx} className="bg-slate-50 rounded-lg p-3 border border-slate-100">
+              <div className="flex items-center gap-2 mb-1">
+                <stat.icon className="w-4 h-4 text-emerald-600" />
+                <span className="text-xs text-slate-500">{stat.label}</span>
+              </div>
+              <p className="text-lg font-bold text-slate-800">
+                {currencySymbol}
+                {formatAmount(stat.amount)}
+              </p>
+            </div>
+          ))}
+        </div>
+
+        {/* Zakat Due & CTA */}
+        <div className="bg-gradient-to-r from-emerald-50 to-emerald-100/50 rounded-xl p-5 mb-2 border border-emerald-200">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-sm font-medium text-emerald-800">Your Zakat Due</span>
+            <span className="text-2xl font-bold text-emerald-700">
+              {currencySymbol}
+              {formatAmount(zakatAmount)}
+            </span>
+          </div>
+          <p className="text-xs text-emerald-700 mb-4">
+            Help us continue our work – every contribution changes lives.
+          </p>
+          <a
+            href={paymentUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center justify-center gap-2 w-full bg-emerald-700 hover:bg-emerald-800 text-white font-semibold py-3.5 px-4 rounded-xl transition-all shadow-md hover:shadow-lg"
+          >
+            Pay Zakat Now <ArrowRight className="w-4 h-4" />
+          </a>
+        </div>
+
+        <p className="text-xs text-center text-slate-400 mt-2">
+          You'll be redirected to our secure payment page.
+        </p>
+      </div>
     </div>
-    <button
-      onClick={() => onToggle(!active)}
-      className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 no-print cursor-pointer ${
-        active ? 'bg-emerald-600' : 'bg-slate-200'
-      }`}
-    >
-      <span
-        className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-          active ? 'translate-x-6' : 'translate-x-1'
-        }`}
-      />
-    </button>
-    {/* Text fallback for print view */}
-    <span className="hidden print:block text-sm font-bold">{active ? 'Yes' : 'No'}</span>
-  </div>
+  );
+};
+
+// Icons for PayZakatCard
+const Home = (props: any) => (
+  <svg {...props} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <path d="M3 10l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V10z" />
+    <path d="M9 21v-6a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v6" />
+  </svg>
+);
+const GraduationCap = (props: any) => (
+  <svg {...props} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
+    <path d="M6 12v5c3 3 9 3 12 0v-5" />
+  </svg>
 );
 
-// ---------- ShareCard component ----------
+/**
+ * ShareCard (existing, moved outside for clarity)
+ */
 const Icons = {
   X: (props: React.SVGProps<SVGSVGElement>) => (
     <svg viewBox="0 0 24 24" fill="currentColor" {...props}>
@@ -231,25 +314,25 @@ const Icons = {
     </svg>
   ),
   Copy: (props: React.SVGProps<SVGSVGElement>) => (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" {...props}>
       <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
       <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
     </svg>
   ),
   Check: (props: React.SVGProps<SVGSVGElement>) => (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" {...props}>
       <polyline points="20 6 9 17 4 12" />
     </svg>
   ),
   Share: (props: React.SVGProps<SVGSVGElement>) => (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" {...props}>
       <circle cx="18" cy="5" r="3" />
       <circle cx="6" cy="12" r="3" />
       <circle cx="18" cy="19" r="3" />
       <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
       <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
     </svg>
-  )
+  ),
 };
 
 const ShareCard: React.FC = () => {
@@ -261,21 +344,20 @@ const ShareCard: React.FC = () => {
     return () => cancelAnimationFrame(id);
   }, []);
 
-  // Prevent hydration mismatch by checking mount
   if (!mounted) return null;
-  
+
   const pageUrl = 'https://myzakat.vercel.app';
   const shareText = encodeURIComponent(
     'Discover the Zakat Calculator — an accurate, privacy-first tool to estimate your Zakat. Select your School of Thought, enter assets & liabilities, get a clear breakdown and printable report. No data leaves your device — try it now:'
   );
-  
+
   const whatsappShareText = encodeURIComponent(
-    "*Zakat Calculator* — Accurate & Private Tool\n\n" +
-    "Calculate your Zakat easily:\n" +
-    "- Choose your School of Thought\n" +
-    "- Enter assets & liabilities\n" +
-    "- Get a clear breakdown + printable report\n\n" +
-    "Try it now:"
+    '*Zakat Calculator* — Accurate & Private Tool\n\n' +
+      'Calculate your Zakat easily:\n' +
+      '- Choose your School of Thought\n' +
+      '- Enter assets & liabilities\n' +
+      '- Get a clear breakdown + printable report\n\n' +
+      'Try it now:'
   );
 
   const shareUrlEncoded = encodeURIComponent(pageUrl);
@@ -309,7 +391,7 @@ const ShareCard: React.FC = () => {
       try {
         await navigator.share({
           title: 'Zakat Calculator',
-          text: 'Discover the Zakat Calculator — an accurate, privacy-first tool to estimate your Zakat. Select your School of Thought, enter assets & liabilities, get a clear breakdown and printable report. No data leaves your device — try it now:',
+          text: 'Discover the Zakat Calculator — an accurate, privacy-first tool to estimate your Zakat.',
           url: pageUrl,
         });
       } catch {
@@ -320,7 +402,6 @@ const ShareCard: React.FC = () => {
 
   return (
     <div className="bg-white rounded-xl shadow-lg border border-slate-100 p-6 max-w-md w-full mx-auto">
-      {/* Header Section */}
       <div className="flex items-start justify-between mb-6">
         <div className="flex items-center gap-3">
           <div className="p-2.5 bg-linear-to-br from-emerald-50 to-emerald-100 rounded-lg text-emerald-700 shadow-sm border border-emerald-200/50">
@@ -332,7 +413,7 @@ const ShareCard: React.FC = () => {
           </div>
         </div>
 
-        {mounted && typeof navigator !== "undefined" && "share" in navigator && (
+        {mounted && typeof navigator !== 'undefined' && 'share' in navigator && (
           <button
             onClick={handleNativeShare}
             className="md:hidden text-slate-400 hover:text-slate-600 p-2 cursor-pointer"
@@ -343,23 +424,30 @@ const ShareCard: React.FC = () => {
         )}
       </div>
 
-      {/* Copy Link Input Section */}
       <div className="relative flex items-center mb-6 group">
         <div className="absolute left-3 text-slate-400">
-           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path></svg>
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"
+            />
+          </svg>
         </div>
-        <input 
-          type="text" 
-          readOnly 
-          value={pageUrl} 
+        <input
+          type="text"
+          readOnly
+          value={pageUrl}
           className="w-full pl-9 pr-24 py-2.5 text-sm bg-slate-50 border border-slate-200 rounded-lg text-slate-600 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all"
         />
         <button
           onClick={handleCopy}
           className={`absolute right-1.5 top-1.5 bottom-1.5 px-3 rounded-md text-xs font-medium transition-all duration-200 flex items-center gap-1.5 cursor-pointer
-            ${copied 
-              ? 'bg-emerald-100 text-emerald-700 shadow-none' 
-              : 'bg-white shadow-sm border border-slate-200 text-slate-700 hover:text-emerald-700 hover:border-emerald-300'
+            ${
+              copied
+                ? 'bg-emerald-100 text-emerald-700 shadow-none'
+                : 'bg-white shadow-sm border border-slate-200 text-slate-700 hover:text-emerald-700 hover:border-emerald-300'
             }`}
         >
           {copied ? <Icons.Check className="w-3.5 h-3.5" /> : <Icons.Copy className="w-3.5 h-3.5" />}
@@ -367,13 +455,17 @@ const ShareCard: React.FC = () => {
         </button>
       </div>
 
-      <div className="h-px bg-slate-100 w-full mb-5"></div>
+      <div className="h-px bg-slate-100 w-full mb-5" />
 
-      {/* Social Buttons Grid */}
       <div className="grid grid-cols-2 sm:grid-cols-2 gap-2">
-
         <SocialButton
-          onClick={() => openWindow(`https://wa.me/?text=${encodeURIComponent(`${decodeURIComponent(whatsappShareText)} ${pageUrl}`)}`)}
+          onClick={() =>
+            openWindow(
+              `https://wa.me/?text=${encodeURIComponent(
+                `${decodeURIComponent(whatsappShareText)} ${pageUrl}`
+              )}`
+            )
+          }
           icon={<Icons.WhatsApp className="w-4 h-4" />}
           label="WhatsApp"
           colorClass="bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border-emerald-100"
@@ -394,21 +486,26 @@ const ShareCard: React.FC = () => {
         />
 
         <SocialButton
-          onClick={() => openWindow(`https://www.linkedin.com/shareArticle?mini=true&url=${shareUrlEncoded}&title=${shareText}`)}
+          onClick={() =>
+            openWindow(
+              `https://www.linkedin.com/shareArticle?mini=true&url=${shareUrlEncoded}&title=${shareText}`
+            )
+          }
           icon={<Icons.LinkedIn className="w-4 h-4" />}
           label="LinkedIn"
           colorClass="bg-indigo-50 text-indigo-700 hover:bg-indigo-100 border-indigo-100"
         />
-
       </div>
     </div>
   );
 };
 
-// Extracted button component for cleaner JSX
-const SocialButton: React.FC<{ onClick: () => void; icon: React.ReactNode; label: string; colorClass: string }> = ({ 
-  onClick, icon, label, colorClass 
-}) => (
+const SocialButton: React.FC<{
+  onClick: () => void;
+  icon: React.ReactNode;
+  label: string;
+  colorClass: string;
+}> = ({ onClick, icon, label, colorClass }) => (
   <button
     onClick={onClick}
     className={`flex items-center justify-center gap-2.5 px-3 py-2.5 rounded-lg border transition-all duration-200 group cursor-pointer ${colorClass}`}
@@ -420,7 +517,7 @@ const SocialButton: React.FC<{ onClick: () => void; icon: React.ReactNode; label
 );
 
 /**
- * Page component
+ * Main Component
  */
 export default function App(): React.ReactElement {
   // --- State Management ---
@@ -429,11 +526,11 @@ export default function App(): React.ReactElement {
   // Currency State
   const [currency, setCurrency] = useState<string>('INR');
 
-  // Precious Metal Prices (Defaults per gram in INR)
+  // Precious Metal Prices (Defaults per gram in INR – Mumbai, 12/02/2026)
   const [goldPrice, setGoldPrice] = useState<number>(16057.84);
   const [silverPrice, setSilverPrice] = useState<number>(277.55);
 
-  // Expanded open/close state for sections
+  // Expanded sections
   const [sections, setSections] = useState<Sections>({
     cash: true,
     gold: true,
@@ -442,14 +539,15 @@ export default function App(): React.ReactElement {
     liabilities: true,
   });
 
-  // Assets Data
+  // Assets Data – always separate personal & investment gold/silver
   const [assets, setAssets] = useState<Assets>({
     cashInHand: 0,
     bankDeposit: 0,
     digitalWallets: 0,
-    goldGrams: 0,
-    goldJewelryUsage: true,
-    silverGrams: 0,
+    goldPersonalGrams: 0,
+    goldInvestmentGrams: 0,
+    silverPersonalGrams: 0,
+    silverInvestmentGrams: 0,
     businessStock: 0,
     businessCash: 0,
     receivables: 0,
@@ -463,9 +561,7 @@ export default function App(): React.ReactElement {
     expensesDue: 0,
   });
 
-  // --- Effects ---
-
-  // Update Symbol when currency changes
+  // --- Helper: currency symbol
   const currencySymbol =
     {
       INR: '₹',
@@ -476,13 +572,12 @@ export default function App(): React.ReactElement {
       SAR: '﷼',
     }[currency] || '$';
 
-  // --- Logic & Calculations ---
-
+  // --- Toggle sections
   const toggleSection = (key: keyof Sections) => {
     setSections((prev) => ({ ...prev, [key]: !prev[key] }));
   };
 
-  // generic typed updateAsset that maintains correct asset value types
+  // --- Update asset/liability fields
   function updateAsset<K extends keyof Assets>(key: K, value: Assets[K]) {
     setAssets((prev) => ({ ...prev, [key]: value }));
   }
@@ -490,6 +585,7 @@ export default function App(): React.ReactElement {
     setLiabilities((prev) => ({ ...prev, [key]: value }));
   }
 
+  // --- Calculations (Zakat)
   const calculations = useMemo(() => {
     let zakatableAssets = 0;
     let deductibleLiabilities = 0;
@@ -501,22 +597,18 @@ export default function App(): React.ReactElement {
     zakatableAssets += cashTotal;
     if (cashTotal > 0) breakdown.push({ label: 'Cash & Savings', amount: cashTotal });
 
-    // 2. Gold & Silver
+    // 2. Gold & Silver – taxable portion depends on fiqh
     let goldValue = 0;
     let silverValue = 0;
 
     if (fiqh === 'hanafi') {
-      goldValue = assets.goldGrams * goldPrice;
-      silverValue = assets.silverGrams * silverPrice;
+      // Hanafi: all gold & silver taxable
+      goldValue = (assets.goldPersonalGrams + assets.goldInvestmentGrams) * goldPrice;
+      silverValue = (assets.silverPersonalGrams + assets.silverInvestmentGrams) * silverPrice;
     } else {
-      // Shafi, Maliki, Hanbali, Unspecified: Exempt personal jewelry
-      if (assets.goldJewelryUsage) {
-        goldValue = 0;
-        silverValue = 0;
-      } else {
-        goldValue = assets.goldGrams * goldPrice;
-        silverValue = assets.silverGrams * silverPrice;
-      }
+      // Non-Hanafi: only investment portion is taxable (personal jewelry exempt)
+      goldValue = assets.goldInvestmentGrams * goldPrice;
+      silverValue = assets.silverInvestmentGrams * silverPrice;
     }
 
     const preciousMetalsTotal = goldValue + silverValue;
@@ -530,13 +622,11 @@ export default function App(): React.ReactElement {
     if (businessTotal > 0) breakdown.push({ label: 'Business Assets', amount: businessTotal });
 
     // 4. Investments
-    let investmentsTotal = 0;
-    investmentsTotal += assets.stocksValue;
-    investmentsTotal += assets.cryptoValue;
+    const investmentsTotal = assets.stocksValue + assets.cryptoValue;
     zakatableAssets += investmentsTotal;
     if (investmentsTotal > 0) breakdown.push({ label: 'Investments', amount: investmentsTotal });
 
-    // 5. Liabilities
+    // 5. Liabilities (deductible per fiqh)
     if (fiqh === 'hanafi') {
       deductibleLiabilities = liabilities.immediateDebts + liabilities.expensesDue;
     } else if (fiqh === 'shafii') {
@@ -547,7 +637,7 @@ export default function App(): React.ReactElement {
 
     const netWorth = Math.max(0, zakatableAssets - deductibleLiabilities);
 
-    // Nisab
+    // Nisab (silver based for mixed assets)
     let silverNisab = 0;
     let goldNisab = 0;
     if (fiqh === 'hanafi') {
@@ -558,14 +648,9 @@ export default function App(): React.ReactElement {
       goldNisab = 85 * goldPrice;
     }
 
-    // Rule: Use Silver Nisab if mixed assets
     const hasMixedAssets =
       cashTotal + businessTotal + investmentsTotal + silverValue > 0;
-    const applicableNisab = hasMixedAssets
-      ? silverNisab
-      : assets.goldGrams > 0
-      ? goldNisab
-      : silverNisab;
+    const applicableNisab = hasMixedAssets ? silverNisab : goldNisab;
 
     const isEligible = netWorth >= applicableNisab;
     const zakatPayable = isEligible ? netWorth * 0.025 : 0;
@@ -583,57 +668,28 @@ export default function App(): React.ReactElement {
     };
   }, [assets, liabilities, fiqh, goldPrice, silverPrice]);
 
-  // Handle Print
+  // --- Print handler
   const handlePrint = () => {
     if (typeof window !== 'undefined' && window.print) window.print();
   };
 
   return (
     <div className="min-h-screen bg-slate-50 font-sans text-slate-900 print:bg-white print:text-black">
-      {/* Styles for Printing */}
+      {/* Print styles */}
       <style>{`
-        /* Hide printable report from screen view */
-        .print-only {
-          display: none;
-        }
-
+        .print-only { display: none; }
         @media print {
-          body * {
-            visibility: hidden;
-          }
-
-          .print-area,
-          .print-area * {
-            visibility: visible;
-          }
-
-          .print-area {
-            position: absolute;
-            left: 0;
-            top: 0;
-            width: 100%;
-          }
-
-          /* Show printable report only when printing */
-          .print-only {
-            display: block;
-          }
-
-          .no-print {
-            display: none !important;
-          }
-
-          input {
-            border: none !important;
-            padding: 0 !important;
-            font-weight: bold;
-          }
+          body * { visibility: hidden; }
+          .print-area, .print-area * { visibility: visible; }
+          .print-area { position: absolute; left: 0; top: 0; width: 100%; }
+          .print-only { display: block; }
+          .no-print { display: none !important; }
+          input { border: none !important; padding: 0 !important; font-weight: bold; }
         }
       `}</style>
 
       {/* --- HEADER --- */}
       <header className="bg-emerald-900 text-white shadow-lg no-print">
-        {/* Top Bar */}
         <div className="bg-emerald-950 px-4 py-2 text-xs md:text-sm text-emerald-200 border-b border-emerald-800">
           <div className="max-w-5xl mx-auto flex flex-col md:flex-row justify-between items-center gap-2">
             <span>
@@ -650,17 +706,13 @@ export default function App(): React.ReactElement {
               </strong>
             </span>
             <span className="flex items-center gap-4">
-              <a
-                href="mailto:ilannoorirc@gmail.com"
-                className="hover:text-white flex items-center gap-1"
-              >
+              <a href="mailto:ilannoorirc@gmail.com" className="hover:text-white flex items-center gap-1">
                 <Mail size={12} /> ilannoorirc@gmail.com
               </a>
             </span>
           </div>
         </div>
 
-        {/* Main Header */}
         <div className="max-w-5xl mx-auto px-4 py-8 md:py-12">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
             <div>
@@ -675,37 +727,51 @@ export default function App(): React.ReactElement {
               </p>
             </div>
 
-            <div className="flex flex-col gap-3 w-full md:w-auto md:m-0 mb-3">
-              <div className="flex gap-2">
-                <select
-                  value={fiqh}
-                  onChange={(e) => setFiqh(e.target.value as FiqhType)}
-                  className="bg-emerald-800 text-white border border-emerald-600 text-sm rounded-lg p-2.5 outline-none focus:ring-2 focus:ring-emerald-400 flex-1 cursor-pointer"
-                >
-                  <option value="hanafi">Hanafi</option>
-                  <option value="shafii">Shafi&apos;i</option>
-                  <option value="maliki">Maliki</option>
-                  <option value="hanbali">Hanbali</option>
-                  <option value="unspecified">Unspecified</option>
-                </select>
+            <div className="flex flex-col gap-3 w-full md:w-auto">
+              <div className="flex gap-2 items-start w-full justify-end">
+                {/* Fiqh Disclaimer Tooltip (Left Side) */}
+                <div className="text-xs text-white bg-emerald-800/90 p-2 rounded-md border border-emerald-700 w-90 z-20 no-print">
+                  <Info size={12} className="inline mr-1 mb-0.5" />
+                  Proper Fiqh selection is important for accurate zakat calculation. Select
+                  unspecified if unsure, but we recommend consulting a scholar for
+                  personalized guidance. This tool provides estimates based on general
+                  principles and may not cover all individual circumstances.
+                </div>
 
-                <select
-                  value={currency}
-                  onChange={(e) => setCurrency(e.target.value)}
-                  className="bg-emerald-800 text-white border border-emerald-600 text-sm rounded-lg p-2.5 outline-none focus:ring-2 focus:ring-emerald-400 w-24 cursor-pointer"
-                >
-                  <option value="INR">INR (₹)</option>
-                  <option value="USD">USD ($)</option>
-                  <option value="EUR">EUR (€)</option>
-                  <option value="GBP">GBP (£)</option>
-                  <option value="AED">AED (د.إ)</option>
-                  <option value="SAR">SAR (﷼)</option>
-                </select>
+                {/* Stacked Selectors (Right Side) */}
+                <div className="flex flex-col gap-2">
+                  {/* Fiqh Selector */}
+                  <select
+                    value={fiqh}
+                    onChange={(e) => setFiqh(e.target.value as FiqhType)}
+                    className="bg-emerald-800 text-white border border-emerald-600 rounded-lg p-2.5 outline-none focus:ring-2 focus:ring-emerald-400 w-28 md:h-11 h-17 cursor-pointer"
+                  >
+                    <option value="hanafi">Hanafi</option>
+                    <option value="shafii">Shafi&apos;i</option>
+                    <option value="maliki">Maliki</option>
+                    <option value="hanbali">Hanbali</option>
+                    <option value="unspecified">Unspecified</option>
+                  </select>
+
+                  {/* Currency Selector */}
+                  <select
+                    value={currency}
+                    onChange={(e) => setCurrency(e.target.value)}
+                    className="md:h-11 h-17 bg-emerald-800 text-white border border-emerald-600 rounded-lg p-2.5 outline-none focus:ring-2 focus:ring-emerald-400 w-28 cursor-pointer"
+                  >
+                    <option value="INR">INR (₹)</option>
+                    <option value="USD">USD ($)</option>
+                    <option value="EUR">EUR (€)</option>
+                    <option value="GBP">GBP (£)</option>
+                    <option value="AED">AED (د.إ)</option>
+                    <option value="SAR">SAR (﷼)</option>
+                  </select>
+                </div>
               </div>
 
-              {/* Market Rates */}
-              <div className="bg-emerald-800/50 p-3 rounded-lg border border-emerald-600/30 text-sm">
-                <div className="flex items-center justify-between mb-2">
+              {/* Market Rates with Note */}
+              <div className="bg-emerald-800/50 p-3 rounded-lg border border-emerald-600/30 text-sm md:mb-0 mb-3">
+                <div className="flex items-center justify-between">
                   <p className="text-emerald-200 text-xs font-semibold uppercase tracking-wider">
                     Market Rates (Per Gram)
                   </p>
@@ -750,14 +816,14 @@ export default function App(): React.ReactElement {
                   Update rates to match your local market and currency.
                 </div>
               </div>
-            </div>
+            </div>          
           </div>
         </div>
       </header>
 
       <main className="max-w-5xl mx-auto px-4 -mt-8 pb-12">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* LEFT COLUMN: Calculator Inputs */}
+          {/* LEFT COLUMN: Input Forms */}
           <div className="lg:col-span-2 space-y-6">
             {/* 1. Cash */}
             <Card className="no-print">
@@ -770,7 +836,7 @@ export default function App(): React.ReactElement {
                 currency={currencySymbol}
               />
               {sections.cash && (
-                <div className="p-6 bg-white animate-in slide-in-from-top-2 duration-200">
+                <div className="p-6 bg-white">
                   <InputGroup
                     label="Cash on Hand"
                     value={assets.cashInHand}
@@ -796,7 +862,7 @@ export default function App(): React.ReactElement {
               )}
             </Card>
 
-            {/* 2. Gold */}
+            {/* 2. Gold & Silver – always separate personal/investment inputs */}
             <Card className="no-print">
               <SectionHeader
                 icon={Gem}
@@ -804,43 +870,73 @@ export default function App(): React.ReactElement {
                 isOpen={sections.gold}
                 toggle={() => toggleSection('gold')}
                 total={
-                  (fiqh === 'hanafi' || !assets.goldJewelryUsage ? assets.goldGrams * goldPrice : 0) +
-                  (fiqh === 'hanafi' || !assets.goldJewelryUsage ? assets.silverGrams * silverPrice : 0)
+                  (assets.goldPersonalGrams + assets.goldInvestmentGrams) * goldPrice +
+                  (assets.silverPersonalGrams + assets.silverInvestmentGrams) * silverPrice
                 }
                 currency={currencySymbol}
               />
               {sections.gold && (
-                <div className="p-6 bg-white animate-in slide-in-from-top-2 duration-200">
-                  <div className="grid grid-cols-2 gap-4 mb-4">
-                    <InputGroup
-                      label="Gold (Grams)"
-                      value={assets.goldGrams}
-                      onChange={(v) => updateAsset('goldGrams', v)}
-                      currencySymbol="g"
-                      placeholder="0"
-                    />
-                    <InputGroup
-                      label="Silver (Grams)"
-                      value={assets.silverGrams}
-                      onChange={(v) => updateAsset('silverGrams', v)}
-                      currencySymbol="g"
-                      placeholder="0"
-                    />
+                <div className="p-6 bg-white">
+                  {/* Gold */}
+                  <div className="mb-6">
+                    <h4 className="text-sm font-semibold text-slate-800 mb-3 flex items-center gap-2">
+                      <Gem size={16} className="text-amber-600" /> Gold
+                    </h4>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <InputGroup
+                        label="Gold – Personal Use (grams)"
+                        value={assets.goldPersonalGrams}
+                        onChange={(v) => updateAsset('goldPersonalGrams', v)}
+                        tooltip={
+                          fiqh === 'hanafi'
+                            ? 'Zakatable in Hanafi fiqh.'
+                            : 'Exempt from Zakat in non-Hanafi fiqh.'
+                        }
+                        unit="g"
+                      />
+                      <InputGroup
+                        label="Gold – Investment (grams)"
+                        value={assets.goldInvestmentGrams}
+                        onChange={(v) => updateAsset('goldInvestmentGrams', v)}
+                        tooltip="Gold held for trade or investment – Zakatable in all fiqhs."
+                        unit="g"
+                      />
+                    </div>
                   </div>
-                  <div className="bg-slate-50 p-4 rounded-lg border border-slate-100">
-                    <Toggle
-                      label="Is gold and silver used for personal jewelry?"
-                      active={assets.goldJewelryUsage}
-                      onToggle={(v) => updateAsset('goldJewelryUsage', v)}
-                      tooltip="Exempt in Shafi'i, Maliki, Hanbali, Unspecified if used for adornment."
-                    />
-                    {assets.goldJewelryUsage && fiqh !== 'hanafi' && (
-                      <p className="text-xs text-emerald-600">Exempt from Zakat based on {fiqh} fiqh.</p>
-                    )}
-                    {assets.goldJewelryUsage && fiqh === 'hanafi' && (
-                      <p className="text-xs text-amber-600">Zakatable in Hanafi fiqh.</p>
-                    )}
+
+                  {/* Silver */}
+                  <div>
+                    <h4 className="text-sm font-semibold text-slate-800 mb-3 flex items-center gap-2">
+                      <Coins size={16} className="text-slate-500" /> Silver
+                    </h4>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <InputGroup
+                        label="Silver – Personal Use (grams)"
+                        value={assets.silverPersonalGrams}
+                        onChange={(v) => updateAsset('silverPersonalGrams', v)}
+                        tooltip={
+                          fiqh === 'hanafi'
+                            ? 'Zakatable in Hanafi fiqh.'
+                            : 'Exempt from Zakat in non-Hanafi fiqh.'
+                        }
+                        unit="g"
+                      />
+                      <InputGroup
+                        label="Silver – Investment (grams)"
+                        value={assets.silverInvestmentGrams}
+                        onChange={(v) => updateAsset('silverInvestmentGrams', v)}
+                        tooltip="Silver held for trade or investment – Zakatable in all fiqhs."
+                        unit="g"
+                      />
+                    </div>
                   </div>
+
+                  {fiqh !== 'hanafi' && (
+                    <p className="text-xs text-emerald-600 mt-4 bg-emerald-50 p-2 rounded border border-emerald-100">
+                      <Info size={12} className="inline mr-1" />
+                      Based on {fiqh} fiqh, personal use jewelry is exempt from Zakat. Only investment portion is taxable.
+                    </p>
+                  )}
                 </div>
               )}
             </Card>
@@ -856,7 +952,7 @@ export default function App(): React.ReactElement {
                 currency={currencySymbol}
               />
               {sections.business && (
-                <div className="p-6 bg-white animate-in slide-in-from-top-2 duration-200">
+                <div className="p-6 bg-white">
                   <InputGroup
                     label="Value of Inventory/Stock"
                     value={assets.businessStock}
@@ -892,7 +988,7 @@ export default function App(): React.ReactElement {
                 currency={currencySymbol}
               />
               {sections.investments && (
-                <div className="p-6 bg-white animate-in slide-in-from-top-2 duration-200">
+                <div className="p-6 bg-white">
                   <InputGroup
                     label="Shares/Stocks Value"
                     value={assets.stocksValue}
@@ -920,7 +1016,7 @@ export default function App(): React.ReactElement {
                 currency={currencySymbol}
               />
               {sections.liabilities && (
-                <div className="p-6 bg-white animate-in slide-in-from-top-2 duration-200">
+                <div className="p-6 bg-white">
                   {fiqh === 'shafii' && (
                     <p className="text-xs text-red-500 mb-2">Debts are not deductible in Shafi'i fiqh.</p>
                   )}
@@ -930,14 +1026,22 @@ export default function App(): React.ReactElement {
                     onChange={(v) => updateLiability('immediateDebts', v)}
                     currencySymbol={currencySymbol}
                   />
+                  {fiqh === 'hanafi' && (
+                    <InputGroup
+                      label="Expenses Due"
+                      value={liabilities.expensesDue}
+                      onChange={(v) => updateLiability('expensesDue', v)}
+                      currencySymbol={currencySymbol}
+                    />
+                  )}
                 </div>
               )}
             </Card>
           </div>
 
-          {/* RIGHT COLUMN: Summary & Contact */}
+          {/* RIGHT COLUMN: Summary, Pay Zakat, Share, Contact */}
           <div className="lg:col-span-1 space-y-6">
-            {/* Result Card */}
+            {/* Summary Card */}
             <div className="bg-white rounded-xl shadow-lg border border-emerald-100 overflow-hidden">
               <div className="bg-slate-900 text-white p-6 relative overflow-hidden">
                 <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500 rounded-full blur-3xl opacity-20 -translate-y-1/2 translate-x-1/2" />
@@ -949,7 +1053,6 @@ export default function App(): React.ReactElement {
 
               <div className="p-6">
                 <div className="space-y-4">
-                  {/* Total Assets */}
                   <div className="flex justify-between items-center text-sm">
                     <span className="text-slate-500">Total Zakatable Assets</span>
                     <span className="font-semibold text-slate-800">
@@ -957,7 +1060,6 @@ export default function App(): React.ReactElement {
                     </span>
                   </div>
 
-                  {/* Liabilities */}
                   {calculations.deductibleLiabilities > 0 && (
                     <div className="flex justify-between items-center text-sm text-red-600">
                       <span>Deductible Debts</span>
@@ -969,7 +1071,6 @@ export default function App(): React.ReactElement {
 
                   <div className="h-px bg-slate-200 my-2" />
 
-                  {/* Net Worth */}
                   <div className="flex justify-between items-center">
                     <span className="font-bold text-slate-700">Net Wealth</span>
                     <span className="font-bold text-slate-900 text-lg">
@@ -977,10 +1078,11 @@ export default function App(): React.ReactElement {
                     </span>
                   </div>
 
-                  {/* Nisab Status */}
                   <div
                     className={`p-4 rounded-lg text-center border ${
-                      calculations.isEligible ? 'bg-emerald-50 border-emerald-200' : 'bg-slate-50 border-slate-200'
+                      calculations.isEligible
+                        ? 'bg-emerald-50 border-emerald-200'
+                        : 'bg-slate-50 border-slate-200'
                     }`}
                   >
                     <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider block mb-1">
@@ -988,7 +1090,9 @@ export default function App(): React.ReactElement {
                     </span>
                     <span className="text-slate-700 font-medium block mb-2">
                       {currencySymbol}{' '}
-                      {calculations.applicableNisab.toLocaleString(undefined, { maximumFractionDigits: 0 })}
+                      {calculations.applicableNisab.toLocaleString(undefined, {
+                        maximumFractionDigits: 0,
+                      })}
                     </span>
 
                     {calculations.isEligible ? (
@@ -1002,17 +1106,18 @@ export default function App(): React.ReactElement {
                     )}
                   </div>
 
-                  {/* Final Amount */}
                   {calculations.isEligible && (
                     <div className="mt-4 pt-4 border-t border-dashed border-emerald-200">
                       <p className="text-center text-sm text-slate-500 mb-1">Total Payable (2.5%)</p>
                       <p className="text-center text-4xl font-bold text-emerald-700">
-                        {currencySymbol} {calculations.zakatPayable.toLocaleString(undefined, { maximumFractionDigits: 0 })}
+                        {currencySymbol}{' '}
+                        {calculations.zakatPayable.toLocaleString(undefined, {
+                          maximumFractionDigits: 0,
+                        })}
                       </p>
                     </div>
                   )}
 
-                  {/* Download Button */}
                   <button
                     onClick={handlePrint}
                     className="w-full mt-4 flex items-center justify-center gap-2 bg-slate-800 hover:bg-slate-900 text-white py-3 rounded-lg transition-colors font-medium text-sm no-print cursor-pointer"
@@ -1023,8 +1128,17 @@ export default function App(): React.ReactElement {
               </div>
             </div>
 
+            {/* PAY ZAKAT CARD – Inserted here */}
+            {calculations.isEligible && calculations.zakatPayable > 0 && (
+              <PayZakatCard
+                zakatAmount={calculations.zakatPayable}
+                currency={currency}
+                currencySymbol={currencySymbol}
+              />
+            )}
+
             {/* Share Card */}
-            <ShareCard/>
+            <ShareCard />
 
             {/* Contact Card */}
             <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6 no-print">
@@ -1098,13 +1212,14 @@ export default function App(): React.ReactElement {
               Abdur Rehman Shaikh <ExternalLink size={12} />
             </a>
             <p className="text-xs opacity-60">
-              Disclaimer: This calculator provides an estimate based on standard Fiqh opinions. Please verify complex assets with a qualified scholar.
+              Disclaimer: This calculator provides an estimate based on standard Fiqh opinions. Please verify
+              complex assets with a qualified scholar.
             </p>
           </div>
         </div>
       </footer>
 
-      {/* --- PRINTABLE REPORT VIEW (Hidden normally) --- */}
+      {/* --- PRINTABLE REPORT --- */}
       <div className="print-only p-8 max-w-3xl mx-auto print-area">
         {/* Print Header */}
         <div className="flex justify-between items-start border-b-2 border-slate-800 pb-6 mb-8">
@@ -1119,7 +1234,6 @@ export default function App(): React.ReactElement {
           </div>
         </div>
 
-        {/* Client Inputs Summary */}
         <div className="grid grid-cols-2 gap-8 mb-8">
           <div>
             <h3 className="font-bold border-b border-slate-300 pb-1 mb-2">Parameters</h3>
@@ -1161,7 +1275,6 @@ export default function App(): React.ReactElement {
           </div>
         </div>
 
-        {/* Detailed Breakdown Table */}
         <table className="w-full text-sm mb-8">
           <thead className="bg-slate-100">
             <tr>
@@ -1197,9 +1310,13 @@ export default function App(): React.ReactElement {
           </tfoot>
         </table>
 
-        {/* Footer for Print */}
         <div className="text-center text-xs text-slate-400 mt-12 pt-8 border-t border-slate-200">
-          <p>Calculated using Il An Noor Zakat Calculator | Developed by <a href="https://abdurrahmanshkh.vercel.app" target="_blank" className="text-emerald-600 hover:underline">Abdur Rehman Shaikh</a></p>
+          <p>
+            Calculated using Il An Noor Zakat Calculator | Developed by{' '}
+            <a href="https://abdurrahmanshkh.vercel.app" target="_blank" className="text-emerald-600 hover:underline">
+              Abdur Rehman Shaikh
+            </a>
+          </p>
           <p>For doubts contact Mufti Danish: +91 8104998499 | ilannoorirc@gmail.com</p>
         </div>
       </div>
@@ -1207,7 +1324,6 @@ export default function App(): React.ReactElement {
   );
 }
 
-/* Icon Helper */
 const HelpCircleIcon: React.FC = () => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
