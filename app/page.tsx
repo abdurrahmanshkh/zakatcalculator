@@ -442,9 +442,11 @@ const PayZakatCard: React.FC<{ zakatAmount: number; currency: string; currencySy
     return amt.toLocaleString(undefined, { maximumFractionDigits: 0 });
   };
 
-  const paymentUrl = `https://www.ilannoor.org/payments?type=zakat&amount=${Math.floor(
-    zakatAmount
-  )}`;
+  let paymentUrl = "https://www.ilannoor.org/payments";
+
+  if (zakatAmount > 0) {
+    paymentUrl = `https://www.ilannoor.org/payments?type=zakat&amount=${Math.floor(zakatAmount)}`;
+  }
 
   return (
     <div className="bg-white rounded-xl shadow-lg border border-emerald-200 overflow-hidden relative">
@@ -510,7 +512,7 @@ const PayZakatCard: React.FC<{ zakatAmount: number; currency: string; currencySy
             rel="noopener noreferrer"
             className="flex items-center justify-center gap-2 w-full bg-emerald-700 hover:bg-emerald-800 text-white font-semibold py-3.5 px-4 rounded-xl transition-all shadow-md hover:shadow-lg"
           >
-            Pay Zakat Now <ArrowRight className="w-4 h-4" />
+            {zakatAmount > 0 ? 'Pay Zakat Now ' : 'Donate Now'}<ArrowRight className="w-4 h-4" />
           </a>
         </div>
 
