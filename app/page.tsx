@@ -1047,7 +1047,7 @@ export default function App(): React.ReactElement {
       </main>
 
       {/* --- FOOTER --- */}
-      <footer className="bg-slate-900 text-slate-400 py-12 mt-12 no-print">
+      <footer className="bg-slate-900 text-slate-400 py-12 no-print">
         <div className="max-w-5xl mx-auto px-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 text-sm">
           <div className="space-y-4">
             <h4 className="text-white font-bold text-lg">Il An Noor</h4>
