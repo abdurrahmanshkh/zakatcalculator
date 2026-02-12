@@ -55,7 +55,6 @@ interface Assets {
 
 interface Liabilities {
   immediateDebts: number;
-  expensesDue: number;
 }
 
 /**
@@ -565,7 +564,6 @@ export default function App(): React.ReactElement {
   // Liabilities Data
   const [liabilities, setLiabilities] = useState<Liabilities>({
     immediateDebts: 0,
-    expensesDue: 0,
   });
 
   // --- Effects ---
@@ -642,11 +640,9 @@ export default function App(): React.ReactElement {
     if (investmentsTotal > 0) breakdown.push({ label: 'Investments', amount: investmentsTotal });
 
     // 5. Liabilities
-    if (fiqh === 'hanafi') {
-      deductibleLiabilities = liabilities.immediateDebts + liabilities.expensesDue;
-    } else if (fiqh === 'shafii') {
+    if (fiqh === 'shafii') {
       deductibleLiabilities = 0;
-    } else if (fiqh === 'maliki' || fiqh === 'hanbali' || fiqh === 'unspecified') {
+    } else {
       deductibleLiabilities = liabilities.immediateDebts;
     }
 
