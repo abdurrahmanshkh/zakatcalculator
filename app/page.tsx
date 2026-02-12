@@ -19,6 +19,11 @@ import {
   MapPin,
   Globe,
   ExternalLink,
+  HandHeart,
+  ArrowRight,
+  Home,
+  Heart,
+  GraduationCap,
 } from 'lucide-react';
 
 /**
@@ -418,6 +423,104 @@ const SocialButton: React.FC<{ onClick: () => void; icon: React.ReactNode; label
     <span className="text-xs font-semibold">{label}</span>
   </button>
 );
+
+/**
+ * Donation Stats Card – Always visible, links to Il An Noor Foundation
+ */
+const PayZakatCard: React.FC<{ zakatAmount: number; currency: string; currencySymbol: string }> = ({
+  zakatAmount,
+  currencySymbol,
+}) => {
+  const stats = [
+    { label: 'Total Funds Donated', amount: 1870381, icon: Coins },
+    { label: 'Ration & Shelter', amount: 921362, icon: Home },
+    { label: 'Medical Aid', amount: 407138, icon: Heart },
+    { label: 'Education Aid', amount: 117581, icon: GraduationCap },
+  ];
+
+  const formatAmount = (amt: number) => {
+    return amt.toLocaleString(undefined, { maximumFractionDigits: 0 });
+  };
+
+  const paymentUrl = `https://www.ilannoor.org/payments?type=zakat&amount=${Math.floor(
+    zakatAmount
+  )}`;
+
+  return (
+    <div className="bg-white rounded-xl shadow-lg border border-emerald-200 overflow-hidden relative">
+      {/* Decorative gradients */}
+      <div className="absolute top-0 right-0 w-40 h-40 bg-emerald-200 rounded-full blur-3xl opacity-30 -translate-y-1/2 translate-x-1/2" />
+      <div className="absolute bottom-0 left-0 w-40 h-40 bg-amber-200 rounded-full blur-3xl opacity-20 translate-y-1/2 -translate-x-1/2" />
+
+      <div className="relative p-6">
+        {/* Header with Foundation link */}
+        <div className="flex items-center gap-3 mb-5">
+          <div className="p-3 bg-linear-to-br from-emerald-600 to-emerald-700 rounded-xl shadow-md">
+            <HandHeart className="w-6 h-6 text-white" />
+          </div>
+          <div>
+            <h3 className="font-bold text-slate-900">
+              <div>Donate Zakat now to</div>
+              <a 
+                href="https://www.ilannoor.org/" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="hover:text-emerald-700 transition-colors underline"
+              >
+                Il An Noor Foundation
+              </a>
+            </h3>
+            <p className="text-sm text-slate-500">100% reaches the most needy</p>
+          </div>
+        </div>
+
+        {/* Impact Stats Grid */}
+        <div className="grid grid-cols-2 gap-3 mb-6">
+          {stats.map((stat, idx) => (
+            <div key={idx} className="bg-slate-50 rounded-lg p-3 border border-slate-100">
+              <div className="flex items-center gap-2 mb-1">
+                <stat.icon className="w-4 h-4 text-emerald-600" />
+                <span className="text-xs text-slate-500">{stat.label}</span>
+              </div>
+              <p className="text-lg font-bold text-slate-800">
+                {currencySymbol}
+                {formatAmount(stat.amount)}
+              </p>
+            </div>
+          ))}
+        </div>
+
+        {/* Conditional Zakat Due & CTA */}
+        <div className="bg-linear-to-r from-emerald-50 to-emerald-100/50 rounded-xl p-5 mb-2 border border-emerald-200">
+          {zakatAmount > 0 && (
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-sm font-medium text-emerald-800">Your Zakat Due</span>
+              <span className="text-2xl font-bold text-emerald-700">
+                {currencySymbol}
+                {formatAmount(zakatAmount)}
+              </span>
+            </div>
+          )}
+          <p className="text-xs text-emerald-700 mb-4">
+            Help us continue our work – every contribution changes lives.
+          </p>
+          <a
+            href={paymentUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center justify-center gap-2 w-full bg-emerald-700 hover:bg-emerald-800 text-white font-semibold py-3.5 px-4 rounded-xl transition-all shadow-md hover:shadow-lg"
+          >
+            Pay Zakat Now <ArrowRight className="w-4 h-4" />
+          </a>
+        </div>
+
+        <p className="text-xs text-center text-slate-400 mt-2">
+          You&apos;ll be redirected to our secure payment page.
+        </p>
+      </div>
+    </div>
+  );
+};
 
 /**
  * Page component
@@ -1022,6 +1125,13 @@ export default function App(): React.ReactElement {
                 </div>
               </div>
             </div>
+
+            {/* Pay Zakat Card – always visible */}
+            <PayZakatCard
+              zakatAmount={calculations.zakatPayable}
+              currency={currency}
+              currencySymbol={currencySymbol}
+            />
 
             {/* Share Card */}
             <ShareCard/>
