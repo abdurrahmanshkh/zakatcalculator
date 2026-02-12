@@ -916,7 +916,7 @@ export default function App(): React.ReactElement {
               />
               {sections.gold && (
                 <div className="p-6 bg-white animate-in slide-in-from-top-2 duration-200">
-                  <div className="grid grid-cols-2 gap-4 mb-4">
+                  <div className="grid grid-cols-2 gap-4">
                     <InputGroup
                       label="Gold (Grams)"
                       value={assets.goldGrams}
