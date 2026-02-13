@@ -534,8 +534,8 @@ export default function App(): React.ReactElement {
   const [currency, setCurrency] = useState<string>('INR');
 
   // Precious Metal Prices (Defaults per gram in INR)
-  const [goldPrice, setGoldPrice] = useState<number>(16057.84);
-  const [silverPrice, setSilverPrice] = useState<number>(277.55);
+  const [goldPrice, setGoldPrice] = useState<number>(15697.73);
+  const [silverPrice, setSilverPrice] = useState<number>(262.30);
 
   // Expanded open/close state for sections
   const [sections, setSections] = useState<Sections>({
@@ -811,7 +811,7 @@ export default function App(): React.ReactElement {
                     Market Rates (Per Gram)
                   </p>
                   <span className="text-xs text-white bg-emerald-900/50 px-2 py-0.5 rounded-full">
-                    Mumbai, India • 12/02/2026
+                    Mumbai • 13/02/2026
                   </span>
                 </div>
                 <div className="flex gap-4">
