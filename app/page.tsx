@@ -1153,7 +1153,7 @@ export default function App(): React.ReactElement {
                   <MessageCircle size={18} /> WhatsApp
                 </a>
                 <a
-                  href={"tel:" + (fiqh === 'shafii' ? '919324656650' : '918104998499')}
+                  href={"tel:" + (fiqh === 'shafii' ? '+919324656650' : '+918104998499')}
                   className="flex items-center justify-center gap-2 w-full py-2.5 bg-white text-slate-700 rounded-lg font-medium hover:bg-slate-50 transition-colors border border-slate-200"
                 >
                   <Phone size={18} /> Call Now
