@@ -534,8 +534,8 @@ export default function App(): React.ReactElement {
   const [currency, setCurrency] = useState<string>('INR');
 
   // Precious Metal Prices (Defaults per gram in INR)
-  const [goldPrice, setGoldPrice] = useState<number>(15697.73);
-  const [silverPrice, setSilverPrice] = useState<number>(262.30);
+  const [goldPrice, setGoldPrice] = useState<number>(15706.12);
+  const [silverPrice, setSilverPrice] = useState<number>(259.45);
 
   // Expanded open/close state for sections
   const [sections, setSections] = useState<Sections>({
@@ -811,7 +811,7 @@ export default function App(): React.ReactElement {
                     Market Rates (Per Gram)
                   </p>
                   <span className="text-xs text-white bg-emerald-900/50 px-2 py-0.5 rounded-full">
-                    Mumbai • 13/02/2026
+                    Mumbai, India • 15/02/2026
                   </span>
                 </div>
                 <div className="flex gap-4">
@@ -1140,11 +1140,12 @@ export default function App(): React.ReactElement {
                 <HelpCircleIcon /> Have Doubts?
               </h3>
               <p className="text-sm text-slate-600 mb-6">
-                Zakat rulings can be complex. For specific queries, contact Mufti Danish directly.
+                Zakat rulings can be complex. For specific queries, contact
+                {fiqh === 'shafii' ? ' Mufti Sohail ' : ' Mufti Danish '}directly.
               </p>
               <div className="space-y-3">
                 <a
-                  href="https://wa.me/918104998499"
+                  href={"whatsapp://send?phone=" + (fiqh === 'shafii' ? '919324656650' : '918104998499')}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center justify-center gap-2 w-full py-2.5 bg-emerald-50 text-emerald-700 rounded-lg font-medium hover:bg-emerald-100 transition-colors border border-emerald-200"
@@ -1152,7 +1153,7 @@ export default function App(): React.ReactElement {
                   <MessageCircle size={18} /> WhatsApp
                 </a>
                 <a
-                  href="tel:+918104998499"
+                  href={"tel:" + (fiqh === 'shafii' ? '919324656650' : '918104998499')}
                   className="flex items-center justify-center gap-2 w-full py-2.5 bg-white text-slate-700 rounded-lg font-medium hover:bg-slate-50 transition-colors border border-slate-200"
                 >
                   <Phone size={18} /> Call Now
