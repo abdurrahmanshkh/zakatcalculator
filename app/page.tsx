@@ -432,8 +432,8 @@ const PayZakatCard: React.FC<{ zakatAmount: number; currency: string; currencySy
 }) => {
   const stats = [
     { label: 'Total Funds Donated', amount: 1870381, icon: Coins },
-    { label: 'Ration & Shelter', amount: 921362, icon: Home },
-    { label: 'Medical Aid', amount: 407138, icon: Heart },
+    { label: 'Ration & Shelter', amount: 1320962, icon: Home },
+    { label: 'Medical Aid', amount: 424138, icon: Heart },
     { label: 'Education Aid', amount: 117581, icon: GraduationCap },
   ];
 
