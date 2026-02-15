@@ -771,7 +771,7 @@ export default function App(): React.ReactElement {
                 </div>
                 <h1 className="text-3xl md:text-4xl font-bold tracking-tight">Zakat Calculator</h1>
               </div>
-              <p className="text-emerald-100 text-lg opacity-90 max-w-lg">
+              <p className="text-emerald-100 text-lg opacity-90">
                 Accurate, private, and easy-to-use calculation based on your School of Thought.
               </p>
             </div>
@@ -793,7 +793,7 @@ export default function App(): React.ReactElement {
                 <select
                   value={currency}
                   onChange={(e) => setCurrency(e.target.value)}
-                  className="bg-emerald-800 text-white border border-emerald-600 text-sm rounded-lg p-2.5 outline-none focus:ring-2 focus:ring-emerald-400 w-24 cursor-pointer"
+                  className="bg-emerald-800 text-white border border-emerald-600 text-sm rounded-lg p-2.5 outline-none focus:ring-2 focus:ring-emerald-400 md:w-48 w-28 cursor-pointer"
                 >
                   <option value="INR">INR (₹)</option>
                   <option value="USD">USD ($)</option>
@@ -802,6 +802,24 @@ export default function App(): React.ReactElement {
                   <option value="AED">AED (د.إ)</option>
                   <option value="SAR">SAR (﷼)</option>
                 </select>
+              </div>
+
+              {/* Responsive info note */}
+              <div
+                id="fiqh-help"
+                className="bg-emerald-800/30 border border-emerald-600/30 rounded-lg p-3 text-sm text-emerald-100 flex items-start gap-3"
+              >
+                <div className="shrink-0">
+                  <span className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-emerald-900/40 text-emerald-100">
+                    <Info size={14} />
+                  </span>
+                </div>
+
+                <div className="flex-1">
+                  <p className="text-emerald-100 text-xs sm:text-sm leading-snug">
+                    Zakat calculation differs only for <strong>Hanafi</strong> and <strong>Shafi&apos;i</strong> fiqh. Selecting <strong>Unspecified</strong> applies the general calculation used by the majority of schools.
+                  </p>
+                </div>
               </div>
 
               {/* Market Rates */}
