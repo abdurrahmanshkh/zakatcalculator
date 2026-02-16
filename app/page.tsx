@@ -956,13 +956,13 @@ export default function App(): React.ReactElement {
                   {/* Gold Items List */}
                     <div className="space-y-4 mb-4">
                       {assets.goldItems.map((item, index) => (
-                        <div key={index} className="flex gap-3 items-end">
-                          <div className="flex-1">
+                        <div key={index} className="flex gap-2 sm:gap-3 items-end">
+                          <div className="w-20 sm:w-30">
                             <label className="block text-sm font-medium text-slate-700 mb-1">Karat</label>
                             <select
                               value={item.karat}
                               onChange={(e) => updateGoldItem(index, 'karat', Number(e.target.value))}
-                              className="w-full p-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500"
+                              className="w-full p-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 cursor-pointer"
                             >
                               {[24, 22, 21, 18, 14, 10, 8].map(k => (
                                 <option key={k} value={k}>{k}K</option>
@@ -984,8 +984,9 @@ export default function App(): React.ReactElement {
                           {assets.goldItems.length > 1 && (
                             <button
                               onClick={() => removeGoldItem(index)}
-                              className="p-2.5 text-red-500 hover:text-red-700 mb-1"
-                              aria-label="Remove"
+                              className="p-2.5 text-red-500 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors mb-1 cursor-pointer"
+                              aria-label="Remove gold item"
+                              title="Remove this gold item"
                             >
                               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
@@ -999,7 +1000,7 @@ export default function App(): React.ReactElement {
                     {/* Add More Button */}
                     <button
                       onClick={addGoldItem}
-                      className="text-sm text-emerald-600 hover:text-emerald-700 font-medium flex items-center gap-1 mb-4"
+                      className="text-sm text-emerald-600 hover:text-emerald-700 font-medium flex items-center gap-1 mb-4 cursor-pointer"
                     >
                       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" />
