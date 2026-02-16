@@ -43,7 +43,7 @@ interface Assets {
   cashInHand: number;
   bankDeposit: number;
   digitalWallets: number;
-  goldGrams: number;
+  goldItems: Array<{ karat: number; grams: number }>;
   goldJewelryUsage: boolean;
   silverGrams: number;
   businessStock: number;
@@ -551,7 +551,7 @@ export default function App(): React.ReactElement {
     cashInHand: 0,
     bankDeposit: 0,
     digitalWallets: 0,
-    goldGrams: 0,
+    goldItems: [{ karat: 24, grams: 0 }],
     goldJewelryUsage: true,
     silverGrams: 0,
     businessStock: 0,
@@ -585,6 +585,40 @@ export default function App(): React.ReactElement {
     setSections((prev) => ({ ...prev, [key]: !prev[key] }));
   };
 
+  // Helper to update gold items
+  function updateGoldItem(index: number, field: 'karat' | 'grams', value: number) {
+    setAssets(prev => {
+      const newItems = [...prev.goldItems];
+      newItems[index] = { ...newItems[index], [field]: value };
+      return { ...prev, goldItems: newItems };
+    });
+  }
+
+  function addGoldItem() {
+    setAssets(prev => ({
+      ...prev,
+      goldItems: [...prev.goldItems, { karat: 24, grams: 0 }]
+    }));
+  }
+
+  function removeGoldItem(index: number) {
+    setAssets(prev => ({
+      ...prev,
+      goldItems: prev.goldItems.filter((_, i) => i !== index)
+    }));
+  }
+
+  // Calculate total gold value
+  const goldValue = useMemo(() => {
+    const rawValue = assets.goldItems.reduce(
+      (sum, item) => sum + item.grams * goldPrice * (item.karat / 24),
+      0
+    );
+    // Apply jewelry exemption if applicable
+    if (assets.goldJewelryUsage && fiqh !== 'hanafi') return 0;
+    return rawValue;
+  }, [assets.goldItems, goldPrice, assets.goldJewelryUsage, fiqh]);
+
   // generic typed updateAsset that maintains correct asset value types
   function updateAsset<K extends keyof Assets>(key: K, value: Assets[K]) {
     setAssets((prev) => ({ ...prev, [key]: value }));
@@ -608,8 +642,14 @@ export default function App(): React.ReactElement {
     let goldValue = 0;
     let silverValue = 0;
 
+    // Compute gold from items
+    const rawGoldValue = assets.goldItems.reduce(
+      (sum, item) => sum + item.grams * goldPrice * (item.karat / 24),
+      0
+    );
+
     if (fiqh === 'hanafi') {
-      goldValue = assets.goldGrams * goldPrice;
+      goldValue = rawGoldValue;
       silverValue = assets.silverGrams * silverPrice;
     } else {
       // Shafi, Maliki, Hanbali, Unspecified: Exempt personal jewelry
@@ -617,7 +657,7 @@ export default function App(): React.ReactElement {
         goldValue = 0;
         silverValue = 0;
       } else {
-        goldValue = assets.goldGrams * goldPrice;
+        goldValue = rawGoldValue;
         silverValue = assets.silverGrams * silverPrice;
       }
     }
@@ -664,7 +704,7 @@ export default function App(): React.ReactElement {
       cashTotal + businessTotal + investmentsTotal + silverValue > 0;
     const applicableNisab = hasMixedAssets
       ? silverNisab
-      : assets.goldGrams > 0
+      : assets.goldItems.reduce((sum, item) => sum + item.grams * goldPrice * (item.karat / 24), 0) > 0
       ? goldNisab
       : silverNisab;
 
@@ -834,7 +874,7 @@ export default function App(): React.ReactElement {
                 </div>
                 <div className="flex gap-4">
                   <div className="flex-1">
-                    <label className="text-emerald-100 text-xs block">Gold (24k)</label>
+                    <label className="text-emerald-100 text-xs block">Gold (24K)</label>
                     <div className="flex items-center border-b border-emerald-500/50">
                       <span className="text-emerald-300 mr-1">{currencySymbol}</span>
                       <input
@@ -922,22 +962,65 @@ export default function App(): React.ReactElement {
                 title="Gold & Silver"
                 isOpen={sections.gold}
                 toggle={() => toggleSection('gold')}
-                total={
-                  (fiqh === 'hanafi' || !assets.goldJewelryUsage ? assets.goldGrams * goldPrice : 0) +
-                  (fiqh === 'hanafi' || !assets.goldJewelryUsage ? assets.silverGrams * silverPrice : 0)
-                }
+                total={goldValue + (fiqh === 'hanafi' || !assets.goldJewelryUsage ? assets.silverGrams * silverPrice : 0)}
                 currency={currencySymbol}
               />
               {sections.gold && (
                 <div className="p-6 bg-white animate-in slide-in-from-top-2 duration-200">
-                  <div className="grid grid-cols-2 gap-4">
-                    <InputGroup
-                      label="Gold (Grams)"
-                      value={assets.goldGrams}
-                      onChange={(v) => updateAsset('goldGrams', v)}
-                      currencySymbol="g"
-                      placeholder="0"
-                    />
+                  <div className="gap-4">
+                  {/* Gold Items List */}
+                    <div className="space-y-4 mb-4">
+                      {assets.goldItems.map((item, index) => (
+                        <div key={index} className="flex gap-3 items-end">
+                          <div className="flex-1">
+                            <label className="block text-sm font-medium text-slate-700 mb-1">Karat</label>
+                            <select
+                              value={item.karat}
+                              onChange={(e) => updateGoldItem(index, 'karat', Number(e.target.value))}
+                              className="w-full p-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500"
+                            >
+                              {[24, 22, 21, 18, 14, 10, 8].map(k => (
+                                <option key={k} value={k}>{k}K</option>
+                              ))}
+                            </select>
+                          </div>
+                          <div className="flex-1">
+                            <label className="block text-sm font-medium text-slate-700 mb-1">Gold (Grams)</label>
+                            <input
+                              type="number"
+                              min="0"
+                              step="0.01"
+                              value={item.grams || ''}
+                              onChange={(e) => updateGoldItem(index, 'grams', parseFloat(e.target.value) || 0)}
+                              className="w-full p-2.5 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500"
+                              placeholder="0.00"
+                            />
+                          </div>
+                          {assets.goldItems.length > 1 && (
+                            <button
+                              onClick={() => removeGoldItem(index)}
+                              className="p-2.5 text-red-500 hover:text-red-700 mb-1"
+                              aria-label="Remove"
+                            >
+                              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                              </svg>
+                            </button>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* Add More Button */}
+                    <button
+                      onClick={addGoldItem}
+                      className="text-sm text-emerald-600 hover:text-emerald-700 font-medium flex items-center gap-1 mb-4"
+                    >
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" />
+                      </svg>
+                      Add another gold item
+                    </button>
                     <InputGroup
                       label="Silver (Grams)"
                       value={assets.silverGrams}
