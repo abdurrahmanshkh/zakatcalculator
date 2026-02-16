@@ -608,17 +608,6 @@ export default function App(): React.ReactElement {
     }));
   }
 
-  // Calculate total gold value
-  const goldValue = useMemo(() => {
-    const rawValue = assets.goldItems.reduce(
-      (sum, item) => sum + item.grams * goldPrice * (item.karat / 24),
-      0
-    );
-    // Apply jewelry exemption if applicable
-    if (assets.goldJewelryUsage && fiqh !== 'hanafi') return 0;
-    return rawValue;
-  }, [assets.goldItems, goldPrice, assets.goldJewelryUsage, fiqh]);
-
   // generic typed updateAsset that maintains correct asset value types
   function updateAsset<K extends keyof Assets>(key: K, value: Assets[K]) {
     setAssets((prev) => ({ ...prev, [key]: value }));
@@ -627,59 +616,57 @@ export default function App(): React.ReactElement {
     setLiabilities((prev) => ({ ...prev, [key]: value }));
   }
 
+  // --- Memoized raw values (before exemption) ---
+  const rawGoldValue = useMemo(() => {
+    return assets.goldItems.reduce(
+      (sum, item) => sum + item.grams * goldPrice * (item.karat / 24),
+      0
+    );
+  }, [assets.goldItems, goldPrice]);
+
+  const rawSilverValue = useMemo(() => {
+    return assets.silverGrams * silverPrice;
+  }, [assets.silverGrams, silverPrice]);
+
+  // --- Exempted values (apply jewelry rule) ---
+  const goldValue = useMemo(() => {
+    if (assets.goldJewelryUsage && fiqh !== 'hanafi') return 0;
+    return rawGoldValue;
+  }, [rawGoldValue, assets.goldJewelryUsage, fiqh]);
+
+  const silverValue = useMemo(() => {
+    if (assets.goldJewelryUsage && fiqh !== 'hanafi') return 0;
+    return rawSilverValue;
+  }, [rawSilverValue, assets.goldJewelryUsage, fiqh]);
+
+  // Then inside `calculations`, use these precomputed values directly:
   const calculations = useMemo(() => {
     let zakatableAssets = 0;
     let deductibleLiabilities = 0;
     const breakdown: { label: string; amount: number }[] = [];
 
-    // 1. Cash
-    const cashTotal =
-      assets.cashInHand + assets.bankDeposit + assets.digitalWallets + assets.businessCash;
+    // 1. Cash (unchanged)
+    const cashTotal = assets.cashInHand + assets.bankDeposit + assets.digitalWallets + assets.businessCash;
     zakatableAssets += cashTotal;
     if (cashTotal > 0) breakdown.push({ label: 'Cash & Savings', amount: cashTotal });
 
-    // 2. Gold & Silver
-    let goldValue = 0;
-    let silverValue = 0;
-
-    // Compute gold from items
-    const rawGoldValue = assets.goldItems.reduce(
-      (sum, item) => sum + item.grams * goldPrice * (item.karat / 24),
-      0
-    );
-
-    if (fiqh === 'hanafi') {
-      goldValue = rawGoldValue;
-      silverValue = assets.silverGrams * silverPrice;
-    } else {
-      // Shafi, Maliki, Hanbali, Unspecified: Exempt personal jewelry
-      if (assets.goldJewelryUsage) {
-        goldValue = 0;
-        silverValue = 0;
-      } else {
-        goldValue = rawGoldValue;
-        silverValue = assets.silverGrams * silverPrice;
-      }
-    }
-
+    // 2. Gold & Silver – use exempted values
     const preciousMetalsTotal = goldValue + silverValue;
     zakatableAssets += preciousMetalsTotal;
     if (preciousMetalsTotal > 0)
       breakdown.push({ label: 'Zakatable Gold & Silver', amount: preciousMetalsTotal });
 
-    // 3. Business
+    // 3. Business (unchanged)
     const businessTotal = assets.businessStock + assets.receivables;
     zakatableAssets += businessTotal;
     if (businessTotal > 0) breakdown.push({ label: 'Business Assets', amount: businessTotal });
 
-    // 4. Investments
-    let investmentsTotal = 0;
-    investmentsTotal += assets.stocksValue;
-    investmentsTotal += assets.cryptoValue;
+    // 4. Investments (unchanged)
+    const investmentsTotal = assets.stocksValue + assets.cryptoValue;
     zakatableAssets += investmentsTotal;
     if (investmentsTotal > 0) breakdown.push({ label: 'Investments', amount: investmentsTotal });
 
-    // 5. Liabilities
+    // 5. Liabilities (unchanged)
     if (fiqh === 'shafii') {
       deductibleLiabilities = 0;
     } else {
@@ -688,7 +675,7 @@ export default function App(): React.ReactElement {
 
     const netWorth = Math.max(0, zakatableAssets - deductibleLiabilities);
 
-    // Nisab
+    // Nisab (using raw values for presence checks)
     let silverNisab = 0;
     let goldNisab = 0;
     if (fiqh === 'hanafi') {
@@ -699,12 +686,10 @@ export default function App(): React.ReactElement {
       goldNisab = 85 * goldPrice;
     }
 
-    // Rule: Use Silver Nisab if mixed assets
-    const hasMixedAssets =
-      cashTotal + businessTotal + investmentsTotal + silverValue > 0;
+    const hasMixedAssets = cashTotal + businessTotal + investmentsTotal + rawSilverValue > 0;
     const applicableNisab = hasMixedAssets
       ? silverNisab
-      : assets.goldItems.reduce((sum, item) => sum + item.grams * goldPrice * (item.karat / 24), 0) > 0
+      : rawGoldValue > 0
       ? goldNisab
       : silverNisab;
 
@@ -722,7 +707,7 @@ export default function App(): React.ReactElement {
       goldNisab,
       silverNisab,
     };
-  }, [assets, liabilities, fiqh, goldPrice, silverPrice]);
+  }, [assets, liabilities, fiqh, goldPrice, silverPrice, goldValue, silverValue, rawGoldValue, rawSilverValue]);
 
   // Handle Print
   const handlePrint = () => {
