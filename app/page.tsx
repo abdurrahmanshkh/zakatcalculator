@@ -854,7 +854,7 @@ export default function App(): React.ReactElement {
                     Market Rates (Per Gram)
                   </p>
                   <span className="text-xs text-white bg-emerald-900/50 px-2 py-0.5 rounded-full">
-                    Mumbai, India • 27/02/2026
+                    Mumbai, India • 28/02/2026
                   </span>
                 </div>
                 <div className="flex gap-4">
