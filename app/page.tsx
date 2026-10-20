@@ -793,7 +793,7 @@ Calculated on ${new Date().toLocaleDateString()} using MyZakat (Il An Noor Found
   ];
 
   return (
-    <div className="min-h-screen bg-slate-50/60 text-slate-900 font-sans selection:bg-slate-200 selection:text-slate-900 print:bg-white print:text-black">
+    <div className="min-h-screen bg-slate-50/30 text-slate-900 font-sans selection:bg-slate-200 selection:text-slate-900 print:bg-white print:text-black">
       {/* Print Styles */}
       <style>{`
         .print-only {
