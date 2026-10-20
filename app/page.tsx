@@ -508,8 +508,8 @@ export default function App(): React.ReactElement {
   const [currency, setCurrency] = useState<string>('INR');
 
   // Market Rates
-  const [goldPrice, setGoldPrice] = useState<number>(15971.82);
-  const [silverPrice, setSilverPrice] = useState<number>(270.20);
+  const [goldPrice, setGoldPrice] = useState<number>(14717.00);
+  const [silverPrice, setSilverPrice] = useState<number>(230.00);
   const [isEditingRates, setIsEditingRates] = useState<boolean>(false);
   const [showFiqhModal, setShowFiqhModal] = useState<boolean>(false);
   const [copiedSummary, setCopiedSummary] = useState<boolean>(false);
@@ -963,7 +963,7 @@ Calculated on ${new Date().toLocaleDateString()} using MyZakat (Il An Noor Found
                   Market Rates (Per Gram)
                 </span>
                 <span className="text-[11px] text-emerald-300/80 hidden md:inline">
-                  • Mumbai, India (14/03/2026)
+                  • Mumbai, India (20/10/2026)
                 </span>
               </div>
               <button
