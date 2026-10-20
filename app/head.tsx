@@ -17,7 +17,7 @@ export default function Head() {
     <>
       {/* explicit manifest link (optional — Next will serve app/manifest.ts automatically) */}
       <link rel="manifest" href="/manifest.json" />
-      <meta name="theme-color" content="#0ea5a4" />
+      <meta name="theme-color" content="#0c111c" />
       <script type="application/ld+json">{JSON.stringify(ld)}</script>
     </>
   );
