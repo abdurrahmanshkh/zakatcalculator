@@ -1398,7 +1398,7 @@ Calculated on ${new Date().toLocaleDateString()} using MyZakat (Il An Noor Found
           {/* RIGHT 5 COLUMNS: Sticky Summary & Community Deck */}
           <div className="lg:col-span-5 space-y-6 lg:sticky lg:top-6 no-print">
             {/* Primary Result Card */}
-            <div className="bg-white rounded-2xl shadow-sm border border-slate-200/90 overflow-hidden transition-all">
+            <div id="zakat-summary-card" className="bg-white rounded-2xl shadow-sm border border-slate-200/90 overflow-hidden transition-all scroll-mt-6">
               {/* Card Header */}
               <div className="bg-slate-900 text-white p-5 sm:p-6 border-b border-slate-800">
                 <div className="flex items-center justify-between">
@@ -1648,37 +1648,63 @@ Calculated on ${new Date().toLocaleDateString()} using MyZakat (Il An Noor Found
       </main>
 
       {/* --- FLOATING MOBILE SUMMARY BAR (Mobile Responsive Guard) --- */}
-      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-slate-200 p-3 sm:p-4 shadow-xl no-print">
-        <div className="flex items-center justify-between gap-3 max-w-md mx-auto">
-          <div className="min-w-0">
-            <div className="flex items-center gap-1.5 text-xs text-slate-500">
-              <span>Zakat Due (2.5%)</span>
-              <span
-                className={`text-[10px] font-bold px-1.5 py-0.2 rounded ${
-                  calculations.isEligible ? 'bg-emerald-100 text-emerald-800' : 'bg-slate-100 text-slate-600'
-                }`}
-              >
-                {calculations.isEligible ? 'Due' : 'Below Nisab'}
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-slate-900/98 backdrop-blur-xl border-t border-slate-800 shadow-[0_-8px_30px_rgba(0,0,0,0.35)] px-3.5 sm:px-4 py-2.5 pb-[max(0.75rem,env(safe-area-inset-bottom,0.75rem))] no-print">
+        <div className="flex items-center justify-between gap-2 max-w-xl mx-auto">
+          {/* Tappable summary jump anchor */}
+          <button
+            type="button"
+            onClick={() => {
+              const el = document.getElementById('zakat-summary-card');
+              if (el) el.scrollIntoView({ behavior: 'smooth' });
+            }}
+            className="min-w-0 text-left group cursor-pointer focus:outline-none flex-1 pr-1"
+            aria-label="View complete itemized Zakat summary"
+          >
+            <div className="flex items-center gap-1.5 mb-0.5">
+              <span className="text-[11px] font-semibold text-slate-300 uppercase tracking-wider group-hover:text-white transition-colors flex items-center gap-1 shrink-0">
+                Zakat Due
+                <ChevronUp size={12} className="text-slate-400 group-hover:text-emerald-400 transition-colors" />
+              </span>
+              {calculations.isEligible ? (
+                <span className="inline-flex items-center gap-1 px-1.5 py-0.2 rounded-full bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 text-[9px] font-bold shrink-0">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                  Due
+                </span>
+              ) : (
+                <span className="inline-flex items-center gap-1 px-1.5 py-0.2 rounded-full bg-slate-800 border border-slate-700 text-slate-400 text-[9px] font-medium shrink-0">
+                  <span className="w-1.5 h-1.5 rounded-full bg-slate-500" />
+                  Below Nisab
+                </span>
+              )}
+            </div>
+
+            <div className="flex items-baseline gap-1.5 min-w-0">
+              <p className="text-lg sm:text-xl font-black text-white font-tabular tracking-tight leading-none truncate">
+                {currencySymbol}{' '}
+                {calculations.isEligible
+                  ? calculations.zakatPayable.toLocaleString(undefined, {
+                      maximumFractionDigits: 0,
+                    })
+                  : '0'}
+              </p>
+              <span className="text-[10px] text-slate-400 font-medium truncate leading-none">
+                {calculations.isEligible
+                  ? '(2.5%)'
+                  : `Nisab: ${currencySymbol}${Math.round(calculations.applicableNisab).toLocaleString()}`}
               </span>
             </div>
-            <p className="text-lg font-extrabold text-slate-900 font-tabular">
-              {currencySymbol}{' '}
-              {calculations.isEligible
-                ? calculations.zakatPayable.toLocaleString(undefined, {
-                    maximumFractionDigits: 0,
-                  })
-                : '0'}
-            </p>
-          </div>
+          </button>
 
-          <div className="flex items-center gap-2">
+          {/* Action buttons */}
+          <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
             <button
               type="button"
               onClick={handlePrint}
-              aria-label="Download statement"
-              className="p-2.5 rounded-xl border border-slate-200 text-slate-700 hover:bg-slate-100 cursor-pointer"
+              title="Download assessment statement PDF"
+              aria-label="Download statement PDF"
+              className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-slate-800 hover:bg-slate-700 active:scale-95 text-slate-200 hover:text-white border border-slate-700 flex items-center justify-center transition-all cursor-pointer shadow-xs shrink-0"
             >
-              <Download size={18} />
+              <Download size={16} />
             </button>
             <a
               href={`https://www.ilannoor.org/payments?type=zakat&amount=${Math.floor(
@@ -1686,17 +1712,18 @@ Calculated on ${new Date().toLocaleDateString()} using MyZakat (Il An Noor Found
               )}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="bg-emerald-700 hover:bg-emerald-800 text-white font-semibold text-xs sm:text-sm py-2.5 px-4 rounded-xl shadow-xs inline-flex items-center gap-1.5 cursor-pointer whitespace-nowrap"
+              className="h-9 sm:h-10 px-3 sm:px-4 rounded-xl bg-emerald-700 hover:bg-emerald-600 active:scale-95 text-white font-bold text-xs sm:text-sm flex items-center justify-center gap-1.5 shadow-md shadow-emerald-950/40 transition-all cursor-pointer whitespace-nowrap shrink-0"
             >
-              {calculations.zakatPayable > 0 ? 'Fulfill Zakat' : 'Donate'}
-              <ArrowRight size={14} />
+              <HandHeart size={12} className="text-emerald-200 shrink-0" />
+              <span>Donate</span>
+              <ArrowRight size={12} className="shrink-0" />
             </a>
           </div>
         </div>
       </div>
 
       {/* --- FOOTER --- */}
-      <footer className="bg-slate-900 text-slate-400 py-14 border-t border-slate-800 no-print">
+      <footer className="bg-slate-900 text-slate-400 py-14 pb-28 lg:pb-14 border-t border-slate-800 no-print">
         <div className="max-w-6xl mx-auto px-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 text-sm">
           <div className="space-y-4">
             <div className="flex items-center gap-2 text-white font-bold text-lg">
