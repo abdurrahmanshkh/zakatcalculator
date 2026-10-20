@@ -102,10 +102,10 @@ const SectionHeader: React.FC<SectionHeaderProps> = ({
     type="button"
     onClick={toggle}
     aria-expanded={isOpen}
-    className="w-full flex items-center justify-between p-4 sm:p-5 bg-white hover:bg-slate-50/80 transition-all border-b border-slate-100 no-print cursor-pointer text-left select-none group"
+    className="w-full flex items-center justify-between p-4 sm:p-5 bg-white hover:bg-slate-50/70 transition-all border-b border-slate-100 no-print cursor-pointer text-left select-none group"
   >
     <div className="flex items-center gap-3.5 min-w-0">
-      <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center shrink-0 border border-emerald-100/80 group-hover:bg-emerald-100/70 transition-colors">
+      <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-slate-100 text-slate-700 flex items-center justify-center shrink-0 border border-slate-200/80 group-hover:bg-slate-200/80 group-hover:text-slate-900 transition-colors">
         <Icon size={20} className="shrink-0" />
       </div>
       <div className="min-w-0">
@@ -119,7 +119,7 @@ const SectionHeader: React.FC<SectionHeaderProps> = ({
     </div>
     <div className="flex items-center gap-3 shrink-0 ml-3">
       {total > 0 && (
-        <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs sm:text-sm font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200/60 font-tabular">
+        <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs sm:text-sm font-semibold bg-slate-100 text-slate-800 border border-slate-200/90 font-tabular">
           {currency}{' '}
           {total.toLocaleString(undefined, {
             minimumFractionDigits: 0,
@@ -197,7 +197,7 @@ const InputGroup: React.FC<InputGroupProps> = ({
           <button
             type="button"
             onClick={handleClear}
-            className="text-xs text-slate-400 hover:text-red-500 font-medium transition-colors no-print cursor-pointer"
+            className="text-xs text-slate-400 hover:text-red-600 font-medium transition-colors no-print cursor-pointer"
           >
             Clear
           </button>
@@ -206,8 +206,8 @@ const InputGroup: React.FC<InputGroupProps> = ({
 
       {sublabel && <p className="text-xs text-slate-500 mb-2">{sublabel}</p>}
 
-      <div className="relative flex items-center rounded-xl bg-slate-50/80 border border-slate-200 focus-within:bg-white focus-within:border-emerald-500 focus-within:ring-4 focus-within:ring-emerald-500/10 transition-all shadow-2xs">
-        <span className="pl-3.5 pr-1 text-slate-500 font-semibold text-sm select-none">
+      <div className="relative flex items-center rounded-xl bg-slate-50/70 border border-slate-200 focus-within:bg-white focus-within:border-slate-800 focus-within:ring-2 focus-within:ring-slate-900/5 transition-all shadow-2xs">
+        <span className="pl-3.5 pr-1 text-slate-400 font-medium text-sm select-none">
           {currencySymbol}
         </span>
         <input
@@ -239,7 +239,7 @@ const Toggle: React.FC<ToggleProps> = ({ label, active, onToggle, tooltip, badge
       <div className="flex items-center gap-2 flex-wrap">
         <span className="text-sm font-medium text-slate-800 leading-snug">{label}</span>
         {badge && (
-          <span className="text-[11px] font-semibold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800">
+          <span className="text-[11px] font-semibold px-2 py-0.5 rounded-full bg-slate-100 text-slate-700 border border-slate-200">
             {badge}
           </span>
         )}
@@ -251,8 +251,8 @@ const Toggle: React.FC<ToggleProps> = ({ label, active, onToggle, tooltip, badge
       role="switch"
       aria-checked={active}
       onClick={() => onToggle(!active)}
-      className={`relative inline-flex h-6 w-11 shrink-0 items-center rounded-full transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 no-print cursor-pointer ${
-        active ? 'bg-emerald-600' : 'bg-slate-200'
+      className={`relative inline-flex h-6 w-11 shrink-0 items-center rounded-full transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-900 focus-visible:ring-offset-2 no-print cursor-pointer ${
+        active ? 'bg-slate-900' : 'bg-slate-200'
       }`}
     >
       <span
@@ -322,10 +322,10 @@ const ShareCard: React.FC = () => {
   };
 
   return (
-    <div className="bg-white rounded-2xl shadow-sm border border-slate-200/80 p-5 sm:p-6 no-print">
+    <div className="bg-white rounded-2xl shadow-sm border border-slate-200/90 p-5 sm:p-6 no-print">
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2.5">
-          <div className="p-2 rounded-lg bg-emerald-50 text-emerald-700 border border-emerald-100">
+          <div className="p-2 rounded-lg bg-slate-100 text-slate-700 border border-slate-200">
             <Share2 className="w-4 h-4" />
           </div>
           <div>
@@ -338,7 +338,7 @@ const ShareCard: React.FC = () => {
           <button
             type="button"
             onClick={handleNativeShare}
-            className="md:hidden text-slate-500 hover:text-emerald-700 p-2 rounded-lg hover:bg-slate-100 transition-colors cursor-pointer"
+            className="md:hidden text-slate-500 hover:text-slate-800 p-2 rounded-lg hover:bg-slate-100 transition-colors cursor-pointer"
             aria-label="Native Share"
           >
             <Share2 className="w-4 h-4" />
@@ -358,8 +358,8 @@ const ShareCard: React.FC = () => {
           onClick={handleCopy}
           className={`absolute right-1 px-3 py-1.5 rounded-md text-xs font-semibold transition-all flex items-center gap-1.5 cursor-pointer ${
             copied
-              ? 'bg-emerald-600 text-white'
-              : 'bg-white border border-slate-200 text-slate-700 hover:text-emerald-700 hover:border-emerald-300'
+              ? 'bg-slate-900 text-white'
+              : 'bg-white border border-slate-200 text-slate-700 hover:text-slate-900 hover:border-slate-300'
           }`}
         >
           {copied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
@@ -375,9 +375,9 @@ const ShareCard: React.FC = () => {
               `https://wa.me/?text=${encodeURIComponent(`${shareText} ${pageUrl}`)}`
             )
           }
-          className="flex items-center justify-center gap-2 py-2 px-3 rounded-lg bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border border-emerald-100 font-medium transition-colors cursor-pointer"
+          className="flex items-center justify-center gap-2 py-2 px-3 rounded-lg bg-slate-50 text-slate-700 hover:bg-slate-100 border border-slate-200 font-medium transition-colors cursor-pointer"
         >
-          <MessageCircle className="w-3.5 h-3.5" /> WhatsApp
+          <MessageCircle className="w-3.5 h-3.5 text-slate-600" /> WhatsApp
         </button>
         <button
           type="button"
@@ -390,7 +390,7 @@ const ShareCard: React.FC = () => {
           }
           className="flex items-center justify-center gap-2 py-2 px-3 rounded-lg bg-slate-50 text-slate-700 hover:bg-slate-100 border border-slate-200 font-medium transition-colors cursor-pointer"
         >
-          <Globe className="w-3.5 h-3.5" /> Post / X
+          <Globe className="w-3.5 h-3.5 text-slate-600" /> Post / X
         </button>
       </div>
     </div>
@@ -422,38 +422,35 @@ const PayZakatCard: React.FC<{
   }
 
   return (
-    <div className="bg-linear-to-b from-white to-emerald-50/40 rounded-2xl shadow-sm border border-emerald-200/80 p-5 sm:p-6 relative overflow-hidden">
-      {/* Decorative gradient orb */}
-      <div className="absolute top-0 right-0 w-36 h-36 bg-emerald-200/40 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2 pointer-events-none" />
-
+    <div className="bg-white rounded-2xl shadow-sm border border-slate-200/90 p-5 sm:p-6 relative overflow-hidden">
       <div className="relative">
         <div className="flex items-center justify-between gap-3 mb-4">
           <div className="flex items-center gap-3">
-            <div className="p-2.5 bg-emerald-600 text-white rounded-xl shadow-xs">
+            <div className="w-10 h-10 rounded-xl bg-slate-900 text-white flex items-center justify-center shadow-xs">
               <HandHeart className="w-5 h-5" />
             </div>
             <div>
-              <span className="text-[11px] font-semibold text-emerald-700 uppercase tracking-wider block">
-                Verified Partner Charity
+              <span className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider block">
+                Verified Philanthropic Partner
               </span>
               <a
                 href="https://www.ilannoor.org/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="font-bold text-slate-900 hover:text-emerald-700 transition-colors inline-flex items-center gap-1 text-base leading-tight"
+                className="font-bold text-slate-900 hover:text-slate-700 transition-colors inline-flex items-center gap-1 text-base leading-tight"
               >
                 Il An Noor Foundation
                 <ExternalLink size={13} className="text-slate-400" />
               </a>
             </div>
           </div>
-          <span className="inline-flex items-center gap-1 text-[11px] font-medium px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800">
+          <span className="inline-flex items-center gap-1 text-[11px] font-medium px-2 py-0.5 rounded-full bg-slate-100 text-slate-700 border border-slate-200">
             <ShieldCheck size={12} /> 100% Policy
           </span>
         </div>
 
         <p className="text-xs text-slate-600 mb-4 leading-relaxed">
-          100% of your Zakat reaches verified eligible recipients (mustahiqeen) for direct ration, medical relief, and shelter.
+          100% of your Zakat reaches verified eligible recipients (mustahiqeen) for direct ration, medical relief, and shelter without administrative deductions.
         </p>
 
         {/* Stats Grid */}
@@ -461,10 +458,10 @@ const PayZakatCard: React.FC<{
           {stats.map((stat, idx) => (
             <div
               key={idx}
-              className="bg-white/90 backdrop-blur-xs rounded-xl p-2.5 border border-emerald-100/70 shadow-2xs"
+              className="bg-slate-50 rounded-xl p-2.5 border border-slate-200/70"
             >
               <div className="flex items-center gap-1.5 text-slate-500 mb-1">
-                <stat.icon className="w-3.5 h-3.5 text-emerald-600" />
+                <stat.icon className="w-3.5 h-3.5 text-slate-600" />
                 <span className="text-[11px] font-medium truncate">{stat.label}</span>
               </div>
               <p className="text-sm sm:text-base font-bold text-slate-900 font-tabular">
@@ -475,11 +472,11 @@ const PayZakatCard: React.FC<{
         </div>
 
         {/* Action Button */}
-        <div className="bg-emerald-100/60 rounded-xl p-4 border border-emerald-200/80">
+        <div className="bg-slate-50 rounded-xl p-4 border border-slate-200/80">
           {zakatAmount > 0 && (
             <div className="flex items-center justify-between mb-2">
-              <span className="text-xs font-semibold text-emerald-800">Your Calculated Zakat</span>
-              <span className="text-base font-bold text-emerald-900 font-tabular">
+              <span className="text-xs font-semibold text-slate-600">Calculated Obligation</span>
+              <span className="text-base font-bold text-slate-900 font-tabular">
                 {currencySymbol} {formatAmount(zakatAmount)}
               </span>
             </div>
@@ -488,12 +485,12 @@ const PayZakatCard: React.FC<{
             href={paymentUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center justify-center gap-2 w-full bg-emerald-600 hover:bg-emerald-700 active:scale-[0.99] text-white font-semibold py-3 px-4 rounded-xl transition-all shadow-sm hover:shadow-md cursor-pointer text-sm"
+            className="flex items-center justify-center gap-2 w-full bg-slate-900 hover:bg-slate-800 active:scale-[0.99] text-white font-semibold py-3 px-4 rounded-xl transition-all shadow-xs cursor-pointer text-xs sm:text-sm"
           >
-            {zakatAmount > 0 ? 'Fulfill Zakat Now' : 'Donate Sadaqah / Zakat'}
+            {zakatAmount > 0 ? 'Fulfill Zakat Obligation' : 'Donate Sadaqah / Zakat'}
             <ArrowRight className="w-4 h-4" />
           </a>
-          <p className="text-[11px] text-center text-emerald-700/80 mt-2">
+          <p className="text-[11px] text-center text-slate-400 mt-2">
             Secure redirect to Il An Noor official payment portal
           </p>
         </div>
@@ -636,7 +633,7 @@ export default function App(): React.ReactElement {
     return assets.silverGrams * silverPrice;
   }, [assets.silverGrams, silverPrice]);
 
-  // Jewelry exemption (Hanafi counts jewelry; other 3 schools and majority consider personal jewelry exempt)
+  // Jewelry exemption (Hanafi counts jewelry; other 3 schools consider personal jewelry exempt)
   const isJewelryExempt = assets.goldJewelryUsage && fiqh !== 'hanafi';
   const goldValue = isJewelryExempt ? 0 : rawGoldValue;
   const silverValue = isJewelryExempt ? 0 : rawSilverValue;
@@ -651,7 +648,7 @@ export default function App(): React.ReactElement {
       assets.cashInHand + assets.bankDeposit + assets.digitalWallets;
     zakatableAssets += cashTotal;
     if (cashTotal > 0) {
-      breakdown.push({ label: 'Cash & Liquid Savings', amount: cashTotal, color: '#10b981' });
+      breakdown.push({ label: 'Cash & Liquid Savings', amount: cashTotal, color: '#334155' });
     }
 
     // 2. Gold & Silver
@@ -661,7 +658,7 @@ export default function App(): React.ReactElement {
       breakdown.push({
         label: 'Zakatable Gold & Silver',
         amount: preciousMetalsTotal,
-        color: '#f59e0b',
+        color: '#b45309',
       });
     }
 
@@ -670,14 +667,14 @@ export default function App(): React.ReactElement {
       assets.businessStock + assets.businessCash + assets.receivables;
     zakatableAssets += businessTotal;
     if (businessTotal > 0) {
-      breakdown.push({ label: 'Business & Trade Stock', amount: businessTotal, color: '#6366f1' });
+      breakdown.push({ label: 'Business & Trade Stock', amount: businessTotal, color: '#475569' });
     }
 
     // 4. Investments
     const investmentsTotal = assets.stocksValue + assets.cryptoValue;
     zakatableAssets += investmentsTotal;
     if (investmentsTotal > 0) {
-      breakdown.push({ label: 'Investments & Shares', amount: investmentsTotal, color: '#8b5cf6' });
+      breakdown.push({ label: 'Investments & Shares', amount: investmentsTotal, color: '#64748b' });
     }
 
     // 5. Deductible Liabilities
@@ -700,9 +697,6 @@ export default function App(): React.ReactElement {
       goldNisab = 85 * goldPrice;
     }
 
-    // Applicable Nisab Standard:
-    // If wealth consists purely of gold with zero cash/business/silver, gold Nisab applies.
-    // In all mixed asset portfolios, classical scholarly consensus uses Silver Nisab to maximize benefit for the impoverished.
     const hasMixedAssets =
       cashTotal + businessTotal + investmentsTotal + rawSilverValue > 0;
     const applicableNisab = hasMixedAssets
@@ -799,7 +793,7 @@ Calculated on ${new Date().toLocaleDateString()} using MyZakat (Il An Noor Found
   ];
 
   return (
-    <div className="min-h-screen bg-slate-50/70 text-slate-900 font-sans selection:bg-emerald-100 selection:text-emerald-900 print:bg-white print:text-black">
+    <div className="min-h-screen bg-slate-50/60 text-slate-900 font-sans selection:bg-slate-200 selection:text-slate-900 print:bg-white print:text-black">
       {/* Print Styles */}
       <style>{`
         .print-only {
@@ -840,20 +834,17 @@ Calculated on ${new Date().toLocaleDateString()} using MyZakat (Il An Noor Found
       `}</style>
 
       {/* --- TOP PARTNERSHIP BAR --- */}
-      <nav className="bg-slate-900 text-slate-300 text-xs border-b border-slate-800 no-print">
+      <nav className="bg-slate-950 text-slate-400 text-xs border-b border-slate-800/80 no-print">
         <div className="max-w-6xl mx-auto px-4 py-2.5 flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-2">
-            <span className="flex h-2 w-2 relative">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-            </span>
+            <span className="w-1.5 h-1.5 rounded-full bg-slate-400"></span>
             <span className="text-slate-400">
               In Collaboration with{' '}
               <a
                 href="https://www.ilannoor.org/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-white hover:text-emerald-300 font-semibold underline decoration-emerald-500/60 underline-offset-2 transition-colors"
+                className="text-slate-200 hover:text-white font-medium underline decoration-slate-600 underline-offset-2 transition-colors"
               >
                 Il An Noor Foundation
               </a>
@@ -862,12 +853,12 @@ Calculated on ${new Date().toLocaleDateString()} using MyZakat (Il An Noor Found
 
           <div className="flex items-center gap-4 text-xs">
             <span className="hidden sm:inline-flex items-center gap-1.5 text-slate-400">
-              <Lock size={12} className="text-emerald-400" />
+              <Lock size={12} className="text-slate-400" />
               100% Private (No data saved)
             </span>
             <a
               href="mailto:ilannoorirc@gmail.com"
-              className="text-slate-400 hover:text-white transition-colors inline-flex items-center gap-1"
+              className="text-slate-400 hover:text-slate-200 transition-colors inline-flex items-center gap-1"
             >
               <Mail size={12} /> ilannoorirc@gmail.com
             </a>
@@ -876,24 +867,19 @@ Calculated on ${new Date().toLocaleDateString()} using MyZakat (Il An Noor Found
       </nav>
 
       {/* --- HERO & CONTROLS DECK --- */}
-      <header className="relative bg-gradient-to-b from-emerald-950 via-emerald-900 to-slate-900 text-white overflow-hidden no-print pb-16 sm:pb-20">
-        {/* Subtle background glow and geometric pattern */}
-        <div className="absolute inset-0 bg-islamic-pattern opacity-15 pointer-events-none" />
-        <div className="absolute -top-24 -right-24 w-96 h-96 bg-emerald-500/15 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute top-1/2 -left-24 w-80 h-80 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
-
+      <header className="relative bg-[#0c111c] text-white border-b border-slate-800/60 overflow-hidden no-print pb-16 sm:pb-20">
         <div className="relative max-w-6xl mx-auto px-4 pt-8 sm:pt-12">
           {/* Hero Branding */}
           <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-8 mb-8">
             <div className="max-w-xl">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-800/60 border border-emerald-600/40 text-emerald-200 text-xs font-semibold mb-3 backdrop-blur-md">
-                <Sparkles size={13} className="text-amber-300" />
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-900 border border-slate-800 text-slate-300 text-xs font-medium mb-3">
+                <Sparkles size={13} className="text-amber-400/90" />
                 <span>Shariah Aligned • Instant Calculation</span>
               </div>
               <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-white leading-tight">
                 Zakat Calculator
               </h1>
-              <p className="mt-2.5 text-emerald-100/90 text-sm sm:text-base leading-relaxed">
+              <p className="mt-2.5 text-slate-400 text-sm sm:text-base leading-relaxed">
                 Determine your annual Zakat with scholarly precision, live gold & silver rates, and multi-school Fiqh compliance.
               </p>
             </div>
@@ -902,14 +888,14 @@ Calculated on ${new Date().toLocaleDateString()} using MyZakat (Il An Noor Found
             <div className="w-full lg:w-auto flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
               {/* Fiqh Selector */}
               <div className="flex-1 sm:flex-initial">
-                <label className="block text-[11px] font-semibold text-emerald-200 uppercase tracking-wider mb-1">
+                <label className="block text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-1">
                   School of Thought
                 </label>
                 <div className="relative">
                   <select
                     value={fiqh}
                     onChange={(e) => setFiqh(e.target.value as FiqhType)}
-                    className="w-full sm:w-44 appearance-none bg-emerald-900/80 hover:bg-emerald-800/90 text-white font-medium text-sm rounded-xl px-3.5 py-2.5 pr-9 border border-emerald-600/50 outline-none focus:ring-2 focus:ring-emerald-400 focus:border-transparent transition-all cursor-pointer backdrop-blur-sm"
+                    className="w-full sm:w-44 appearance-none bg-slate-900 hover:bg-slate-850 text-white font-medium text-sm rounded-xl px-3.5 py-2.5 pr-9 border border-slate-800 outline-none focus:border-slate-500 focus:ring-2 focus:ring-slate-700/40 transition-all cursor-pointer"
                   >
                     <option value="hanafi" className="bg-slate-900 text-white">Hanafi</option>
                     <option value="shafii" className="bg-slate-900 text-white">Shafi&apos;i</option>
@@ -919,21 +905,21 @@ Calculated on ${new Date().toLocaleDateString()} using MyZakat (Il An Noor Found
                   </select>
                   <ChevronDown
                     size={16}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-emerald-300 pointer-events-none"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none"
                   />
                 </div>
               </div>
 
               {/* Currency Selector */}
               <div className="flex-1 sm:flex-initial">
-                <label className="block text-[11px] font-semibold text-emerald-200 uppercase tracking-wider mb-1">
+                <label className="block text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-1">
                   Base Currency
                 </label>
                 <div className="relative">
                   <select
                     value={currency}
                     onChange={(e) => setCurrency(e.target.value)}
-                    className="w-full sm:w-36 appearance-none bg-emerald-900/80 hover:bg-emerald-800/90 text-white font-medium text-sm rounded-xl px-3.5 py-2.5 pr-9 border border-emerald-600/50 outline-none focus:ring-2 focus:ring-emerald-400 focus:border-transparent transition-all cursor-pointer backdrop-blur-sm"
+                    className="w-full sm:w-36 appearance-none bg-slate-900 hover:bg-slate-850 text-white font-medium text-sm rounded-xl px-3.5 py-2.5 pr-9 border border-slate-800 outline-none focus:border-slate-500 focus:ring-2 focus:ring-slate-700/40 transition-all cursor-pointer"
                   >
                     <option value="INR" className="bg-slate-900 text-white">INR (₹)</option>
                     <option value="USD" className="bg-slate-900 text-white">USD ($)</option>
@@ -944,7 +930,7 @@ Calculated on ${new Date().toLocaleDateString()} using MyZakat (Il An Noor Found
                   </select>
                   <ChevronDown
                     size={16}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-emerald-300 pointer-events-none"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none"
                   />
                 </div>
               </div>
@@ -954,9 +940,9 @@ Calculated on ${new Date().toLocaleDateString()} using MyZakat (Il An Noor Found
                 <button
                   type="button"
                   onClick={() => setShowFiqhModal(true)}
-                  className="w-full sm:w-auto h-11 px-3.5 rounded-xl bg-emerald-800/50 hover:bg-emerald-700/60 border border-emerald-600/40 text-emerald-100 text-xs font-semibold flex items-center justify-center gap-1.5 transition-all cursor-pointer"
+                  className="w-full sm:w-auto h-11 px-3.5 rounded-xl bg-slate-900 hover:bg-slate-850 border border-slate-800 text-slate-300 text-xs font-medium flex items-center justify-center gap-1.5 transition-all cursor-pointer"
                 >
-                  <Scale size={14} className="text-amber-300" />
+                  <Scale size={14} className="text-slate-400" />
                   <span>Fiqh Rulings</span>
                 </button>
               </div>
@@ -964,21 +950,21 @@ Calculated on ${new Date().toLocaleDateString()} using MyZakat (Il An Noor Found
           </div>
 
           {/* Market Rates Strip */}
-          <div className="glass-panel-dark rounded-2xl p-4 sm:p-5 border border-emerald-600/30">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3 pb-3 border-b border-emerald-700/40">
+          <div className="bg-slate-900/80 rounded-2xl p-4 sm:p-5 border border-slate-800 shadow-sm">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3 pb-3 border-b border-slate-800">
               <div className="flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
-                <span className="text-xs font-semibold uppercase tracking-wider text-emerald-200">
+                <span className="w-1.5 h-1.5 rounded-full bg-amber-400/80" />
+                <span className="text-xs font-semibold uppercase tracking-wider text-slate-300">
                   Precious Metals Valuation Benchmark
                 </span>
-                <span className="text-[11px] text-emerald-300/80 hidden md:inline">
+                <span className="text-[11px] text-slate-500 hidden md:inline">
                   • Mumbai, India (14/03/2026)
                 </span>
               </div>
               <button
                 type="button"
                 onClick={() => setIsEditingRates((prev) => !prev)}
-                className="text-xs font-medium text-emerald-200 hover:text-white inline-flex items-center gap-1.5 transition-colors cursor-pointer self-start sm:self-auto"
+                className="text-xs font-medium text-slate-400 hover:text-white inline-flex items-center gap-1.5 transition-colors cursor-pointer self-start sm:self-auto"
               >
                 <SlidersHorizontal size={13} />
                 <span>{isEditingRates ? 'Done Customizing' : 'Adjust Live Rates'}</span>
@@ -987,16 +973,16 @@ Calculated on ${new Date().toLocaleDateString()} using MyZakat (Il An Noor Found
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
               {/* Gold 24K */}
-              <div className="bg-emerald-950/60 rounded-xl p-3 border border-emerald-700/30">
-                <div className="flex items-center justify-between text-xs text-emerald-300 mb-1">
-                  <span className="font-medium flex items-center gap-1">
-                    <span className="w-2 h-2 rounded-full bg-amber-400" /> Gold (24K / gram)
+              <div className="bg-slate-950/80 rounded-xl p-3 border border-slate-800/80">
+                <div className="flex items-center justify-between text-xs text-slate-400 mb-1">
+                  <span className="font-medium flex items-center gap-1.5">
+                    <span className="w-2 h-2 rounded-full bg-amber-500/80" /> Gold (24K / gram)
                   </span>
-                  <span className="text-[10px] text-emerald-400 font-mono">99.9% Pure</span>
+                  <span className="text-[10px] text-slate-500 font-mono">99.9% Pure</span>
                 </div>
                 {isEditingRates ? (
-                  <div className="flex items-center gap-1 mt-1 border-b border-amber-400/60 pb-0.5">
-                    <span className="text-amber-300 font-semibold">{currencySymbol}</span>
+                  <div className="flex items-center gap-1 mt-1 border-b border-slate-600 pb-0.5">
+                    <span className="text-slate-300 font-semibold">{currencySymbol}</span>
                     <input
                       type="number"
                       step="any"
@@ -1017,23 +1003,23 @@ Calculated on ${new Date().toLocaleDateString()} using MyZakat (Il An Noor Found
                     })}
                   </p>
                 )}
-                <p className="text-[11px] text-emerald-300/70 mt-1">
+                <p className="text-[11px] text-slate-400 mt-1">
                   Nisab (Hanafi: 87.48g): {currencySymbol}{' '}
                   {Math.round(calculations.goldNisab).toLocaleString()}
                 </p>
               </div>
 
               {/* Silver */}
-              <div className="bg-emerald-950/60 rounded-xl p-3 border border-emerald-700/30">
-                <div className="flex items-center justify-between text-xs text-emerald-300 mb-1">
-                  <span className="font-medium flex items-center gap-1">
-                    <span className="w-2 h-2 rounded-full bg-slate-300" /> Silver (per gram)
+              <div className="bg-slate-950/80 rounded-xl p-3 border border-slate-800/80">
+                <div className="flex items-center justify-between text-xs text-slate-400 mb-1">
+                  <span className="font-medium flex items-center gap-1.5">
+                    <span className="w-2 h-2 rounded-full bg-slate-400" /> Silver (per gram)
                   </span>
-                  <span className="text-[10px] text-emerald-400 font-mono">Fine Silver</span>
+                  <span className="text-[10px] text-slate-500 font-mono">Fine Silver</span>
                 </div>
                 {isEditingRates ? (
-                  <div className="flex items-center gap-1 mt-1 border-b border-slate-300/60 pb-0.5">
-                    <span className="text-slate-200 font-semibold">{currencySymbol}</span>
+                  <div className="flex items-center gap-1 mt-1 border-b border-slate-600 pb-0.5">
+                    <span className="text-slate-300 font-semibold">{currencySymbol}</span>
                     <input
                       type="number"
                       step="any"
@@ -1054,24 +1040,24 @@ Calculated on ${new Date().toLocaleDateString()} using MyZakat (Il An Noor Found
                     })}
                   </p>
                 )}
-                <p className="text-[11px] text-emerald-300/70 mt-1">
+                <p className="text-[11px] text-slate-400 mt-1">
                   Nisab (Hanafi: 612.36g): {currencySymbol}{' '}
                   {Math.round(calculations.silverNisab).toLocaleString()}
                 </p>
               </div>
 
               {/* Active Nisab Rule */}
-              <div className="bg-emerald-950/60 rounded-xl p-3 border border-emerald-700/30 lg:col-span-2 flex flex-col justify-center">
-                <div className="flex items-center justify-between text-xs text-emerald-200 mb-1">
+              <div className="bg-slate-950/80 rounded-xl p-3 border border-slate-800/80 lg:col-span-2 flex flex-col justify-center">
+                <div className="flex items-center justify-between text-xs text-slate-300 mb-1">
                   <span className="font-semibold flex items-center gap-1.5">
-                    <Scale size={13} className="text-amber-300" /> Active Nisab Threshold
+                    <Scale size={13} className="text-slate-400" /> Active Nisab Threshold
                   </span>
-                  <span className="text-[11px] font-bold text-amber-300 font-tabular">
+                  <span className="text-[11px] font-bold text-white font-tabular">
                     {currencySymbol}{' '}
                     {Math.round(calculations.applicableNisab).toLocaleString()}
                   </span>
                 </div>
-                <p className="text-xs text-emerald-100/80 leading-relaxed">
+                <p className="text-xs text-slate-400 leading-relaxed">
                   Calculated using the <strong>Silver Standard</strong> ({fiqh === 'hanafi' ? '612.36g' : '595g'}), which majority scholarship favors for modern diversified assets to provide broader aid to the needy.
                 </p>
               </div>
@@ -1102,7 +1088,7 @@ Calculated on ${new Date().toLocaleDateString()} using MyZakat (Il An Noor Found
             </div>
 
             {/* 1. Cash & Liquid Assets */}
-            <div className="bg-white rounded-2xl shadow-sm border border-slate-200/80 overflow-hidden no-print">
+            <div className="bg-white rounded-2xl shadow-sm border border-slate-200/90 overflow-hidden no-print">
               <SectionHeader
                 icon={Wallet}
                 title="Cash & Liquid Assets"
@@ -1144,7 +1130,7 @@ Calculated on ${new Date().toLocaleDateString()} using MyZakat (Il An Noor Found
             </div>
 
             {/* 2. Gold & Silver */}
-            <div className="bg-white rounded-2xl shadow-sm border border-slate-200/80 overflow-hidden no-print">
+            <div className="bg-white rounded-2xl shadow-sm border border-slate-200/90 overflow-hidden no-print">
               <SectionHeader
                 icon={Gem}
                 title="Gold & Silver"
@@ -1185,7 +1171,7 @@ Calculated on ${new Date().toLocaleDateString()} using MyZakat (Il An Noor Found
                                   onChange={(e) =>
                                     updateGoldItem(index, 'karat', Number(e.target.value))
                                   }
-                                  className="w-full appearance-none bg-white border border-slate-200 text-slate-800 text-sm font-semibold rounded-lg px-2.5 py-1.5 pr-7 outline-none focus:ring-2 focus:ring-emerald-500 cursor-pointer"
+                                  className="w-full appearance-none bg-white border border-slate-200 text-slate-800 text-sm font-semibold rounded-lg px-2.5 py-1.5 pr-7 outline-none focus:border-slate-500 cursor-pointer"
                                 >
                                   <option value={24}>24K (99.9%)</option>
                                   <option value={22}>22K (91.6%)</option>
@@ -1205,7 +1191,7 @@ Calculated on ${new Date().toLocaleDateString()} using MyZakat (Il An Noor Found
                               <label className="block text-[11px] font-semibold text-slate-500 uppercase tracking-wider mb-1">
                                 Weight in Grams
                               </label>
-                              <div className="relative flex items-center bg-white border border-slate-200 rounded-lg px-2.5 py-1.5 focus-within:ring-2 focus-within:ring-emerald-500">
+                              <div className="relative flex items-center bg-white border border-slate-200 rounded-lg px-2.5 py-1.5 focus-within:border-slate-800">
                                 <input
                                   type="number"
                                   min="0"
@@ -1252,7 +1238,7 @@ Calculated on ${new Date().toLocaleDateString()} using MyZakat (Il An Noor Found
                     <button
                       type="button"
                       onClick={addGoldItem}
-                      className="mt-3 inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-700 hover:text-emerald-800 bg-emerald-50 hover:bg-emerald-100/70 border border-emerald-200/60 px-3 py-1.5 rounded-lg transition-colors cursor-pointer"
+                      className="mt-3 inline-flex items-center gap-1.5 text-xs font-semibold text-slate-800 hover:text-slate-950 bg-slate-100 hover:bg-slate-200/80 border border-slate-200 px-3 py-1.5 rounded-lg transition-colors cursor-pointer"
                     >
                       <Plus size={14} /> Add Another Gold Item
                     </button>
@@ -1281,15 +1267,15 @@ Calculated on ${new Date().toLocaleDateString()} using MyZakat (Il An Noor Found
 
                     <div className="mt-2 text-xs">
                       {isJewelryExempt ? (
-                        <p className="text-emerald-700 flex items-center gap-1.5">
-                          <Check size={14} className="shrink-0" />
+                        <p className="text-slate-600 flex items-center gap-1.5">
+                          <Check size={14} className="shrink-0 text-slate-700" />
                           <span>
                             Personal jewelry is <strong>exempt</strong> from Zakat in {fiqh.charAt(0).toUpperCase() + fiqh.slice(1)} fiqh (total metal worth {currencySymbol} {Math.round(rawGoldValue + rawSilverValue).toLocaleString()} excluded).
                           </span>
                         </p>
                       ) : (
-                        <p className="text-amber-800 flex items-center gap-1.5">
-                          <Info size={14} className="shrink-0 text-amber-600" />
+                        <p className="text-slate-600 flex items-center gap-1.5">
+                          <Info size={14} className="shrink-0 text-slate-500" />
                           <span>
                             Personal jewelry is <strong>zakatable</strong> in Hanafi fiqh and included in the total.
                           </span>
@@ -1302,7 +1288,7 @@ Calculated on ${new Date().toLocaleDateString()} using MyZakat (Il An Noor Found
             </div>
 
             {/* 3. Business & Commercial Assets */}
-            <div className="bg-white rounded-2xl shadow-sm border border-slate-200/80 overflow-hidden no-print">
+            <div className="bg-white rounded-2xl shadow-sm border border-slate-200/90 overflow-hidden no-print">
               <SectionHeader
                 icon={Briefcase}
                 title="Business Assets"
@@ -1345,7 +1331,7 @@ Calculated on ${new Date().toLocaleDateString()} using MyZakat (Il An Noor Found
             </div>
 
             {/* 4. Investments */}
-            <div className="bg-white rounded-2xl shadow-sm border border-slate-200/80 overflow-hidden no-print">
+            <div className="bg-white rounded-2xl shadow-sm border border-slate-200/90 overflow-hidden no-print">
               <SectionHeader
                 icon={TrendingUp}
                 title="Investments & Modern Assets"
@@ -1378,7 +1364,7 @@ Calculated on ${new Date().toLocaleDateString()} using MyZakat (Il An Noor Found
             </div>
 
             {/* 5. Liabilities */}
-            <div className="bg-white rounded-2xl shadow-sm border border-slate-200/80 overflow-hidden no-print">
+            <div className="bg-white rounded-2xl shadow-sm border border-slate-200/90 overflow-hidden no-print">
               <SectionHeader
                 icon={CreditCard}
                 title="Deductible Liabilities"
@@ -1391,7 +1377,7 @@ Calculated on ${new Date().toLocaleDateString()} using MyZakat (Il An Noor Found
               {sections.liabilities && (
                 <div className="p-5 sm:p-6 bg-white animate-in slide-in-from-top-1 duration-150">
                   {fiqh === 'shafii' && (
-                    <div className="mb-4 p-3 rounded-xl bg-amber-50 border border-amber-200 text-xs text-amber-900 leading-relaxed">
+                    <div className="mb-4 p-3 rounded-xl bg-slate-100 border border-slate-200 text-xs text-slate-700 leading-relaxed">
                       <strong>Shafi&apos;i Fiqh Ruling:</strong> In the Shafi&apos;i school, debts owed to others do not deduct from your zakatable assets if you currently possess the assets.
                     </div>
                   )}
@@ -1412,21 +1398,20 @@ Calculated on ${new Date().toLocaleDateString()} using MyZakat (Il An Noor Found
           {/* RIGHT 5 COLUMNS: Sticky Summary & Community Deck */}
           <div className="lg:col-span-5 space-y-6 lg:sticky lg:top-6 no-print">
             {/* Primary Result Card */}
-            <div className="bg-white rounded-2xl shadow-lg border border-emerald-100 overflow-hidden transition-all">
+            <div className="bg-white rounded-2xl shadow-sm border border-slate-200/90 overflow-hidden transition-all">
               {/* Card Header */}
-              <div className="bg-gradient-to-r from-slate-900 via-slate-800 to-emerald-950 text-white p-5 sm:p-6 relative overflow-hidden">
-                <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/20 rounded-full blur-2xl pointer-events-none" />
-                <div className="flex items-center justify-between relative z-10">
+              <div className="bg-slate-900 text-white p-5 sm:p-6 border-b border-slate-800">
+                <div className="flex items-center justify-between">
                   <div>
                     <h2 className="text-lg sm:text-xl font-bold flex items-center gap-2">
-                      <Calculator size={18} className="text-emerald-400" />
+                      <Calculator size={18} className="text-slate-300" />
                       Zakat Summary
                     </h2>
-                    <p className="text-xs text-slate-300 mt-0.5">
+                    <p className="text-xs text-slate-400 mt-0.5">
                       Ruling based on <strong>{fiqh.charAt(0).toUpperCase() + fiqh.slice(1)} Fiqh</strong>
                     </p>
                   </div>
-                  <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-emerald-900/80 text-emerald-200 border border-emerald-600/50 uppercase tracking-wider">
+                  <span className="text-xs font-medium px-2.5 py-1 rounded-full bg-slate-800 text-slate-300 border border-slate-700 uppercase tracking-wider">
                     {currency}
                   </span>
                 </div>
@@ -1442,22 +1427,20 @@ Calculated on ${new Date().toLocaleDateString()} using MyZakat (Il An Noor Found
                       {calculations.nisabProgress}% Reached
                     </span>
                   </div>
-                  <div className="w-full h-2.5 bg-slate-200 rounded-full overflow-hidden">
+                  <div className="w-full h-2 bg-slate-200 rounded-full overflow-hidden">
                     <div
-                      className={`h-full transition-all duration-300 ${
-                        calculations.isEligible ? 'bg-emerald-600' : 'bg-amber-500'
-                      }`}
+                      className="h-full bg-slate-900 transition-all duration-300"
                       style={{ width: `${Math.min(100, calculations.nisabProgress)}%` }}
                     />
                   </div>
                   <div className="flex items-center justify-between text-[11px] text-slate-500 mt-2">
                     <span>Threshold: {currencySymbol} {Math.round(calculations.applicableNisab).toLocaleString()}</span>
                     {calculations.isEligible ? (
-                      <span className="text-emerald-700 font-bold flex items-center gap-1">
+                      <span className="text-slate-900 font-semibold flex items-center gap-1">
                         <Check size={12} /> Nisab Met
                       </span>
                     ) : (
-                      <span className="text-amber-700 font-medium">Below Nisab</span>
+                      <span className="text-slate-500 font-medium">Below Nisab</span>
                     )}
                   </div>
                 </div>
@@ -1521,12 +1504,12 @@ Calculated on ${new Date().toLocaleDateString()} using MyZakat (Il An Noor Found
                   </div>
                 )}
 
-                {/* Final Payable Hero Block */}
-                <div className="mt-5 p-5 rounded-2xl bg-gradient-to-br from-emerald-50 via-emerald-100/50 to-teal-50 border border-emerald-200/80 text-center relative overflow-hidden">
-                  <p className="text-xs font-semibold text-emerald-800 uppercase tracking-wider mb-1">
+                {/* Final Payable Hero Block (Tailored Prestige Slate) */}
+                <div className="mt-5 p-5 rounded-2xl bg-slate-900 text-white text-center relative overflow-hidden border border-slate-800">
+                  <p className="text-[11px] font-semibold text-slate-400 uppercase tracking-widest mb-1">
                     Total Zakat Payable (2.5%)
                   </p>
-                  <p className="text-3xl sm:text-4xl font-extrabold text-emerald-900 font-tabular tracking-tight">
+                  <p className="text-3xl sm:text-4xl font-extrabold text-white font-tabular tracking-tight">
                     {currencySymbol}{' '}
                     {calculations.isEligible
                       ? calculations.zakatPayable.toLocaleString(undefined, {
@@ -1536,7 +1519,7 @@ Calculated on ${new Date().toLocaleDateString()} using MyZakat (Il An Noor Found
                       : '0.00'}
                   </p>
 
-                  <p className="text-xs text-emerald-700/90 mt-1.5">
+                  <p className="text-xs text-slate-400 mt-1.5">
                     {calculations.isEligible
                       ? 'One-fortieth (1/40th) of net wealth'
                       : 'Net wealth has not reached the required Nisab threshold.'}
@@ -1555,9 +1538,9 @@ Calculated on ${new Date().toLocaleDateString()} using MyZakat (Il An Noor Found
                   <button
                     type="button"
                     onClick={handleCopySummary}
-                    className="flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-semibold transition-all cursor-pointer"
+                    className="flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 text-xs font-semibold transition-all cursor-pointer"
                   >
-                    {copiedSummary ? <Check size={14} className="text-emerald-600" /> : <Copy size={14} />}
+                    {copiedSummary ? <Check size={14} className="text-slate-900" /> : <Copy size={14} />}
                     {copiedSummary ? 'Copied!' : 'Copy Summary'}
                   </button>
                 </div>
@@ -1575,10 +1558,10 @@ Calculated on ${new Date().toLocaleDateString()} using MyZakat (Il An Noor Found
             <ShareCard />
 
             {/* Scholar Consultation Card */}
-            <div className="bg-white rounded-2xl shadow-sm border border-slate-200/80 p-5 sm:p-6 no-print">
+            <div className="bg-white rounded-2xl shadow-sm border border-slate-200/90 p-5 sm:p-6 no-print">
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-2.5">
-                  <div className="p-2 rounded-lg bg-emerald-50 text-emerald-700 border border-emerald-100">
+                  <div className="p-2 rounded-lg bg-slate-100 text-slate-700 border border-slate-200">
                     <HelpCircle className="w-4 h-4" />
                   </div>
                   <div>
@@ -1588,8 +1571,8 @@ Calculated on ${new Date().toLocaleDateString()} using MyZakat (Il An Noor Found
                     <p className="text-xs text-slate-500">Have questions about complex assets?</p>
                   </div>
                 </div>
-                <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200/50">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" /> Available
+                <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-slate-700 bg-slate-100 px-2 py-0.5 rounded-full border border-slate-200">
+                  <span className="w-1.5 h-1.5 rounded-full bg-slate-600" /> Available
                 </span>
               </div>
 
@@ -1605,13 +1588,13 @@ Calculated on ${new Date().toLocaleDateString()} using MyZakat (Il An Noor Found
                   }`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border border-emerald-200 font-semibold text-xs transition-colors"
+                  className="flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-semibold text-xs transition-colors"
                 >
                   <MessageCircle size={15} /> WhatsApp
                 </a>
                 <a
                   href={`tel:${fiqh === 'shafii' ? '+919324656650' : '+918104998499'}`}
-                  className="flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl bg-slate-50 text-slate-700 hover:bg-slate-100 border border-slate-200 font-semibold text-xs transition-colors"
+                  className="flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 font-semibold text-xs transition-colors"
                 >
                   <Phone size={15} /> Direct Call
                 </a>
@@ -1623,7 +1606,7 @@ Calculated on ${new Date().toLocaleDateString()} using MyZakat (Il An Noor Found
         {/* --- FREQUENTLY ASKED QUESTIONS SECTION --- */}
         <section className="mt-16 sm:mt-20 max-w-4xl mx-auto no-print">
           <div className="text-center mb-8">
-            <span className="text-xs font-semibold text-emerald-700 uppercase tracking-wider bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200/60">
+            <span className="text-xs font-semibold text-slate-600 uppercase tracking-wider bg-slate-100 px-3 py-1 rounded-full border border-slate-200">
               Clear Guidance
             </span>
             <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-2">
@@ -1640,7 +1623,7 @@ Calculated on ${new Date().toLocaleDateString()} using MyZakat (Il An Noor Found
               return (
                 <div
                   key={index}
-                  className="bg-white rounded-xl border border-slate-200/80 overflow-hidden shadow-2xs"
+                  className="bg-white rounded-xl border border-slate-200/80 overflow-hidden shadow-2xs hover:border-slate-300 transition-colors"
                 >
                   <button
                     type="button"
@@ -1672,7 +1655,7 @@ Calculated on ${new Date().toLocaleDateString()} using MyZakat (Il An Noor Found
               <span>Zakat Due (2.5%)</span>
               <span
                 className={`text-[10px] font-bold px-1.5 py-0.2 rounded ${
-                  calculations.isEligible ? 'bg-emerald-100 text-emerald-800' : 'bg-slate-100 text-slate-600'
+                  calculations.isEligible ? 'bg-slate-100 text-slate-900' : 'bg-slate-100 text-slate-600'
                 }`}
               >
                 {calculations.isEligible ? 'Due' : 'Below Nisab'}
@@ -1703,7 +1686,7 @@ Calculated on ${new Date().toLocaleDateString()} using MyZakat (Il An Noor Found
               )}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs sm:text-sm py-2.5 px-4 rounded-xl shadow-sm inline-flex items-center gap-1.5 cursor-pointer whitespace-nowrap"
+              className="bg-slate-900 hover:bg-slate-800 text-white font-semibold text-xs sm:text-sm py-2.5 px-4 rounded-xl shadow-xs inline-flex items-center gap-1.5 cursor-pointer whitespace-nowrap"
             >
               {calculations.zakatPayable > 0 ? 'Fulfill Zakat' : 'Donate'}
               <ArrowRight size={14} />
@@ -1713,11 +1696,11 @@ Calculated on ${new Date().toLocaleDateString()} using MyZakat (Il An Noor Found
       </div>
 
       {/* --- FOOTER --- */}
-      <footer className="bg-slate-900 text-slate-400 py-14 border-t border-slate-800 no-print">
+      <footer className="bg-slate-950 text-slate-400 py-14 border-t border-slate-800 no-print">
         <div className="max-w-6xl mx-auto px-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 text-sm">
           <div className="space-y-4">
             <div className="flex items-center gap-2 text-white font-bold text-lg">
-              <div className="w-8 h-8 rounded-lg bg-emerald-600 flex items-center justify-center text-white">
+              <div className="w-8 h-8 rounded-lg bg-slate-800 flex items-center justify-center text-white">
                 <Calculator size={18} />
               </div>
               <span>Il An Noor</span>
@@ -1730,14 +1713,14 @@ Calculated on ${new Date().toLocaleDateString()} using MyZakat (Il An Noor Found
                 href="https://www.ilannoor.org"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white flex items-center justify-center transition-colors"
+                className="w-8 h-8 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white flex items-center justify-center transition-colors border border-slate-800"
                 aria-label="Foundation Website"
               >
                 <Globe size={16} />
               </a>
               <a
                 href="mailto:ilannoorirc@gmail.com"
-                className="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white flex items-center justify-center transition-colors"
+                className="w-8 h-8 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white flex items-center justify-center transition-colors border border-slate-800"
                 aria-label="Email Foundation"
               >
                 <Mail size={16} />
@@ -1749,14 +1732,14 @@ Calculated on ${new Date().toLocaleDateString()} using MyZakat (Il An Noor Found
             <h4 className="text-white font-bold text-sm mb-4">Location & Center</h4>
             <ul className="space-y-2.5 text-xs text-slate-400">
               <li className="flex items-start gap-2">
-                <MapPin size={15} className="mt-0.5 text-emerald-400 shrink-0" />
+                <MapPin size={15} className="mt-0.5 text-slate-400 shrink-0" />
                 <span>Il An Noor Library, Sapphire CHS, Sector 35F, Kharghar, Navi Mumbai</span>
               </li>
               <li className="flex items-center gap-2">
-                <Mail size={15} className="text-emerald-400 shrink-0" /> ilannoorirc@gmail.com
+                <Mail size={15} className="text-slate-400 shrink-0" /> ilannoorirc@gmail.com
               </li>
               <li className="flex items-center gap-2">
-                <Phone size={15} className="text-emerald-400 shrink-0" /> +91 8104998499
+                <Phone size={15} className="text-slate-400 shrink-0" /> +91 8104998499
               </li>
             </ul>
           </div>
@@ -1766,7 +1749,7 @@ Calculated on ${new Date().toLocaleDateString()} using MyZakat (Il An Noor Found
             <p className="text-xs text-slate-400 leading-relaxed mb-3">
               Calculations reviewed under supervision of Mufti Danish and Mufti Sohail according to classical texts of Fiqh.
             </p>
-            <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-emerald-400 bg-emerald-950/60 px-2.5 py-1 rounded-full border border-emerald-800/50">
+            <span className="inline-flex items-center gap-1.5 text-[11px] font-medium text-slate-300 bg-slate-900 px-2.5 py-1 rounded-full border border-slate-800">
               <ShieldCheck size={13} /> Verified Shariah Logic
             </span>
           </div>
@@ -1780,7 +1763,7 @@ Calculated on ${new Date().toLocaleDateString()} using MyZakat (Il An Noor Found
               href="https://abdurrahmanshkh.vercel.app/"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-emerald-400 hover:text-emerald-300 font-semibold inline-flex items-center gap-1 text-sm transition-colors"
+              className="text-slate-200 hover:text-white font-semibold inline-flex items-center gap-1 text-sm transition-colors"
             >
               Abdur Rehman Shaikh <ExternalLink size={13} />
             </a>
@@ -1797,7 +1780,7 @@ Calculated on ${new Date().toLocaleDateString()} using MyZakat (Il An Noor Found
           <div className="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 animate-in fade-in zoom-in-95 duration-150">
             <div className="flex items-center justify-between pb-3 border-b border-slate-100 mb-4">
               <div className="flex items-center gap-2">
-                <Scale className="w-5 h-5 text-emerald-600" />
+                <Scale className="w-5 h-5 text-slate-800" />
                 <h3 className="font-bold text-slate-900 text-lg">School of Thought (Fiqh) Rulings</h3>
               </div>
               <button
@@ -1854,7 +1837,7 @@ Calculated on ${new Date().toLocaleDateString()} using MyZakat (Il An Noor Found
         {/* Document Header */}
         <div className="flex justify-between items-start border-b-2 border-slate-900 pb-6 mb-6">
           <div>
-            <span className="text-xs uppercase tracking-widest text-emerald-800 font-bold block mb-1">
+            <span className="text-xs uppercase tracking-widest text-slate-600 font-bold block mb-1">
               Official Assessment Record
             </span>
             <h1 className="text-3xl font-extrabold text-slate-900">Zakat Calculation Statement</h1>
@@ -1863,7 +1846,7 @@ Calculated on ${new Date().toLocaleDateString()} using MyZakat (Il An Noor Found
             </p>
           </div>
           <div className="text-right">
-            <h2 className="font-bold text-lg text-emerald-900">Il An Noor Foundation</h2>
+            <h2 className="font-bold text-lg text-slate-900">Il An Noor Foundation</h2>
             <p className="text-xs text-slate-600">Navi Mumbai, Maharashtra</p>
             <p className="text-xs text-slate-500">Supervision: Mufti Danish & Mufti Sohail</p>
           </div>
@@ -1977,9 +1960,9 @@ Calculated on ${new Date().toLocaleDateString()} using MyZakat (Il An Noor Found
                 {currencySymbol} {calculations.netWorth.toLocaleString(undefined, { minimumFractionDigits: 2 })}
               </td>
             </tr>
-            <tr className="bg-emerald-50 border-t border-emerald-200 text-emerald-950 font-bold text-sm">
+            <tr className="bg-slate-100 border-t border-slate-300 text-slate-950 font-bold text-sm">
               <td className="p-3.5">Total Zakat Due (2.5% of Net Wealth)</td>
-              <td className="p-3.5 text-right font-tabular text-base text-emerald-900">
+              <td className="p-3.5 text-right font-tabular text-base text-slate-950">
                 {currencySymbol} {calculations.zakatPayable.toLocaleString(undefined, { minimumFractionDigits: 2 })}
               </td>
             </tr>
